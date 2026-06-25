@@ -1,0 +1,162 @@
+* {
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    background: linear-gradient(to right, #090c2a, #0a0a38);
+
+}
+
+header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    background-color: #292567;
+
+    color: rgb(244, 242, 242);
+
+    padding: 20px 50px;
+}
+
+nav a {
+
+    color: white;
+
+    text-decoration: none;
+
+    margin-left: 20px;
+
+}
+
+.banner {
+
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background: linear-gradient(to right, #090c2a, #0a0a38);
+
+    color: white;
+
+}
+
+.banner h2 {
+
+    font-size: 40px;
+
+}
+
+.banner p {
+
+    margin: 20px 0;
+
+}
+
+.banner button {
+
+    padding: 15px 30px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background-color: white;
+
+    color: #1e3a5f;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+.filtros {
+    text-align: center;
+
+    padding: 50px;
+
+    color: aliceblue;
+}
+
+.filtros button {
+
+    margin: 10px;
+
+    padding: 12px 20px;
+
+    border: none;
+
+    border-radius: 20px;
+
+    background-color: #535cc2;
+
+    color: white;
+
+    cursor: pointer;
+
+}
+
+.destaques {
+
+    padding: 50px;
+
+}
+
+.destaques h2 {
+
+    margin-bottom: 30px;
+    color: aliceblue;
+
+}
+
+.cards {
+
+    display: flex;
+
+    gap: 30px;
+
+}
+
+.card {
+
+    background: white;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    box-shadow: 0 2px 8px rgba(191, 196, 192, 0.1);
+
+}
+
+.card img {
+
+    border-radius: 10px;
+
+}
+
+footer {
+
+    margin-top: 50px;
+
+    text-align: center;
+
+    padding: 20px;
+
+    background-color: #1e6dcd;
+
+    color: white;
+
+}
