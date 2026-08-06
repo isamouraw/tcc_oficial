@@ -1,0 +1,38 @@
+<div class="login">
+    <h2>Entrar</h2>
+    <input type="email" id="email" placeholder="E-mail">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="fazerLogin()">Entrar</button>
+</div>
+
+<script>
+function fazerLogin() {
+    const email = document.getElementById("email").value;
+    const senha = document.getElementById("senha").value;
+
+    fetch("http://localhost:3000/usuarios/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: email,
+            senha: senha
+        })
+    })
+    // 1. CORREÇÃO: Transforma a resposta bruta em JSON
+    .then(resposta => resposta.json()) 
+    // 2. CORREÇÃO: Agora sim você recebe os dados validados do banco
+    .then(data => {
+        if (data.erro) {
+            alert("E-mail ou senha incorretos!");
+        } else {
+            alert("Login realizado com sucesso!");
+            window.location.href = "index.html";
+        }
+    })
+    .catch(() => {
+        alert("Erro ao conectar ao servidor.");
+    });
+} // 3. CORREÇÃO: Chave que fecha a função fazerLogin() que estava faltando!
+</script>
