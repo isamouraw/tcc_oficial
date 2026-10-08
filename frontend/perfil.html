@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Perfil - CineTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="paginaPerfil">
+
+    <header class="perfil-header">
+
+        <a href="index.html" class="logo-perfil">
+            CineTrack
+        </a>
+
+        <a href="index.html" class="voltar-site">
+            Voltar ao site
+        </a>
+
+    </header>
+
+
+    <main class="perfil-area">
+
+        <section class="perfil-card">
+
+            <div class="perfil-topo">
+
+                <div class="avatar-container">
+
+                    <img id="fotoPerfil" src="" alt="Foto de perfil">
+                
+                    <label for="inputFoto" class="botao-foto">
+                    </label>
+                
+                    <input
+                        type="file"
+                        id="inputFoto"
+                        accept="image/*"
+                    >
+                
+                </div>
+
+                <div>
+                    <h1>Meu Perfil</h1>
+                    <p>Gerencie sua conta do CineTrack</p>
+                </div>
+
+            </div>
+
+
+            <div class="dados-usuario">
+
+                <div class="dado">
+                    <span>Nome</span>
+                    <strong id="nomeUsuario">Carregando...</strong>
+                </div>
+
+                <div class="dado">
+                    <span>E-mail</span>
+                    <strong id="emailUsuario">Carregando...</strong>
+                </div>
+
+            </div>
+
+
+            <div class="opcoes-perfil">
+
+                <button id="btnEditar" class="opcao-perfil">
+                    
+
+                    <div>
+                        <strong>Editar perfil</strong>
+                        <small>Altere seu nome e e-mail</small>
+                    </div>
+
+                    <span class="seta">›</span>
+                </button>
+
+
+                <button id="btnSenha" class="opcao-perfil">
+                    
+
+                    <div>
+                        <strong>Alterar senha</strong>
+                        <small>Atualize sua senha de acesso</small>
+                    </div>
+
+                    <span class="seta">›</span>
+                </button>
+
+
+                <a href="minha-lista.html" class="opcao-perfil">
+                    
+
+                    <div>
+                        <strong>Minha lista</strong>
+                        <small>Veja os filmes salvos</small>
+                    </div>
+
+                    <span class="seta">›</span>
+                </a>
+
+
+                <a href="avaliacoes.html" class="opcao-perfil">
+                  
+
+                    <div>
+                        <strong>Minhas avaliações</strong>
+                        <small>Veja suas avaliações</small>
+                    </div>
+
+                    <span class="seta">›</span>
+                </a>
+
+            </div>
+
+
+            <button id="btnSair" class="btn-sair">
+                 Sair da conta
+            </button>
+
+        </section>
+
+    </main>
+
+
+    <!-- MODAL EDITAR PERFIL -->
+
+    <div id="modalEditar" class="modal">
+
+        <div class="modal-conteudo">
+
+            <button class="fechar" id="fecharEditar">×</button>
+
+            <h2>Editar perfil</h2>
+
+            <p>Atualize seus dados abaixo.</p>
+
+            <label>Nome</label>
+
+            <input
+                type="text"
+                id="novoNome"
+                placeholder="Seu nome"
+            >
+
+            <label>E-mail</label>
+
+            <input
+                type="email"
+                id="novoEmail"
+                placeholder="Seu e-mail"
+            >
+
+            <button id="salvarPerfil" class="btn-principal">
+                Salvar alterações
+            </button>
+
+            <p id="mensagemPerfil"></p>
+
+        </div>
+
+    </div>
+
+
+    <!-- MODAL ALTERAR SENHA -->
+
+    <div id="modalSenha" class="modal">
+
+        <div class="modal-conteudo">
+
+            <button class="fechar" id="fecharSenha">×</button>
+
+            <h2>Alterar senha</h2>
+
+            <p>Digite sua nova senha.</p>
+
+            <label>Nova senha</label>
+
+            <input
+                type="password"
+                id="novaSenha"
+                placeholder="Nova senha"
+            >
+
+            <label>Confirmar senha</label>
+
+            <input
+                type="password"
+                id="confirmarSenha"
+                placeholder="Digite novamente"
+            >
+
+            <button id="salvarSenha" class="btn-principal">
+                Alterar senha
+            </button>
+
+            <p id="mensagemSenha"></p>
+
+        </div>
+
+    </div>
+
+
+    <script src="perfil.js"></script>
+
+</body>
+
+</html>

@@ -1,5 +1,10 @@
 const formLogin = document.getElementById("formLogin");
 const formCadastro = document.getElementById("formCadastro");
+const caixaLogin = document.getElementById("caixaLogin");
+const caixaCadastro = document.getElementById("caixaCadastro");
+const linkIrCadastro = document.getElementById("linkIrCadastro");
+const linkIrLogin = document.getElementById("linkIrLogin");
+ 
  
 formCadastro.addEventListener("submit", async function(event) {
     event.preventDefault();
@@ -41,12 +46,27 @@ formLogin.addEventListener("submit", async function(event) {
     mensagemLogin.innerText = resultado.mensagem;
  
     if (resultado.sucesso) {
+
         mensagemLogin.style.color = "green";
- 
-        //redireciona para pagina home do site
-        window.location.href = "home.html";
+    
+        localStorage.setItem("usuario", JSON.stringify(resultado.usuario));
+    
+        window.location.href = "index.html";
+
     } else {
         mensagemLogin.style.color = "red";
     }
 });
  
+linkIrCadastro.addEventListener("click", function(event) {
+    event.preventDefault(); // Evita que a página recarregue ao clicar no link
+    caixaLogin.style.display = "none";     // Esconde o login
+    caixaCadastro.style.display = "block"; // Mostra o cadastro
+});
+ 
+// Quando clicar em "Faça login"
+linkIrLogin.addEventListener("click", function(event) {
+    event.preventDefault();
+    caixaCadastro.style.display = "none";  // Esconde o cadastro
+    caixaLogin.style.display = "block";    // Mostra o login
+});

@@ -1,125 +1,2253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CineTrack</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-   <header>
+
+    <header>
 
         <h1>CineTrack</h1>
 
+        <nav class="menu">
 
-        <nav>
+            <button onclick="window.location.href='index.html'">
+                Home
+            </button>
 
-            <button onclick="window.location.href='index.html'">Home</button>
+            <button onclick="window.location.href='Filmes.html'">
+                Filmes
+            </button>
 
-            <button onclick="window.location.href='Entrar.html'">Entrar</button>
+            <button id="btnLista" onclick="window.location.href='lista.html'">
+                Lista
+            </button>
 
-            <button onclick="window.location.href='login.html'">Login</button>
-
-            <button onclick="window.location.href='Filmes.html'">Filmes</button>
-
-            <button onclick="window.location.href='lista.html'">Lista</button>
+            <button id="btnPerfil" onclick="window.location.href='Perfil.html'">
+                Perfil
+            </button>
 
         </nav>
 
+
+        <!-- PESQUISA -->
+
         <div class="pesquisa">
 
-            <input type="text" placeholder="Buscar filmes...">
-        
-            <button>🔍</button>
-        
+            <input
+                type="text"
+                id="campoPesquisa"
+                placeholder="Buscar filmes..."
+                autocomplete="off"
+            >
+
+            <div id="sugestoesPesquisa"></div>
+
         </div>
 
-        <div class="usuario-menu">
 
-            <button class="perfil-btn">👤</button>
-        
-            <div class="menu-dropdown">
-        
-                <button>Editar Perfil</button>
-        
-                <button>Configurações</button>
-        
-                <button>Bloquear Usuário</button>
-        
-                <button>Sair da Conta</button>
-        
+        <!-- BOTÃO PARA QUEM NÃO ESTÁ LOGADO -->
+
+        <button id="btnEntrar" class="btn-entrar">
+            Entrar
+        </button>
+
+
+        <!-- MENU DO USUÁRIO LOGADO -->
+
+        <div class="usuario-menu" id="usuarioMenu">
+
+            <input
+                type="file"
+                id="fotoPerfil"
+                accept="image/*"
+            >
+
+            <button class="perfil-btn" id="perfilBtn">
+
+                <img
+                    id="imagemPerfil"
+                    src=""
+                    alt="Foto de perfil"
+                >
+
+            </button>
+
+            <div class="menu-dropdown" id="menuPerfil">
+
+                <button id="alterarFoto">
+                    📷 Alterar foto
+                </button>
+
+                <a href="perfil.html?editar=true">
+                    Editar Perfil
+                </a>
+
+                <a href="favoritos.html">
+                    Favoritos
+                </a>
+
+                <a href="avaliacoes.html">
+                    Avaliações
+                </a>
+
+                <a href="lista.html">
+                    Lista
+                </a>
+
+                <a href="configuracoes.html">
+                    Configurações
+                </a>
+
+                <button id="btnSair">
+                    Sair da Conta
+                </button>
+
             </div>
-        
+
         </div>
 
     </header>
 
-    <section class="banner">
 
-        <h2>Encontre Filmes </h2>
+    <!-- BANNER PRINCIPAL -->
 
-        <p>Uma plataforma  interativa para amantes do entretenimento</p>
+    <section class="banner" id="bannerPrincipal">
 
-        <button>Explorar Catálogo</button>
+        <div class="banner-conteudo">
 
-    </section>
+            <h2>Encontre seu próximo filme favorito</h2>
 
-    <section class="filtros">
+            <p id="bannerDescricao">
+                Descubra filmes e opiniões de outros usuários do CineTrack.
+            </p>
 
-        <h2></h2>
-
-        <button>Favoritos</button>
-
-        <button>Minhas avaliações</button>
-
-        <button>Recomendações</button>
-
-    </section>
-
-    <section class="destaques">
-
-        <h2>Em Destaque</h2>
-
-        <div class="cards">
-
-            <div class="card">
-
-                <img src="../assets/interstelar.webp" alt="Poster" class="poster1">
-
-                <p>Interestelar</p>
-
-            </div>
-
-            <div class="card">
-
-                <img src="../assets/" alt="Poster" class="poster2">
-
-                <p>Homem Aranha</p>
-
-            </div>
-
-            <div class="card">
-
-                <img src="../assets/" alt="Poster" class="poster3">
-
-                <p>John Wick</p>
-
-            </div>
+            <button id="btnExplorar">
+                Explorar filmes
+            </button>
 
         </div>
 
     </section>
 
-    <footer>
 
-        <p>© 2026 CineTrack - Todos os direitos reservados</p>
+    <section class="filtros">
+    </section>
 
-    </footer>
+
+    <!-- FILMES -->
+
+    <section id="filmes" class="container">
+
+        <h2>Filmes em Destaque</h2>
+
+        <div class="carrossel-wrapper">
+
+            <button
+                class="btn-seta"
+                id="btn-prev"
+                type="button"
+            >
+                &#10094;
+            </button>
+
+            <div
+                class="grid-cards"
+                id="carrossel-cards"
+            >
+            </div>
+
+            <button
+                class="btn-seta"
+                id="btn-next"
+                type="button"
+            >
+                &#10095;
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- COMENTÁRIOS MAIS CURTIDOS -->
+
+    <section
+        id="comentariosMaisCurtidos"
+        class="container comentarios-home"
+    >
+
+        <h2>Comentários mais curtidos</h2>
+
+        <div
+            id="listaComentariosCurtidos"
+            class="comentarios-grid"
+        >
+
+            <p>Carregando comentários...</p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         JAVASCRIPT PRINCIPAL
+         ===================================================== -->
+
+    <script>
+
+        // =====================================================
+        // ELEMENTOS PRINCIPAIS
+        // =====================================================
+
+        const carrossel =
+            document.getElementById("carrossel-cards");
+
+        const btnNext =
+            document.getElementById("btn-next");
+
+        const btnPrev =
+            document.getElementById("btn-prev");
+
+        const perfilBtn =
+            document.getElementById("perfilBtn");
+
+        const menuPerfil =
+            document.getElementById("menuPerfil");
+
+        const campoPesquisa =
+            document.getElementById("campoPesquisa");
+
+        const sugestoesPesquisa =
+            document.getElementById("sugestoesPesquisa");
+
+        let filmes = [];
+
+
+        // =====================================================
+        // CARROSSEL
+        // =====================================================
+
+        if (btnNext && carrossel) {
+
+            btnNext.addEventListener(
+                "click",
+                function () {
+
+                    carrossel.scrollBy({
+                        left: 460,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        }
+
+
+        if (btnPrev && carrossel) {
+
+            btnPrev.addEventListener(
+                "click",
+                function () {
+
+                    carrossel.scrollBy({
+                        left: -460,
+                        behavior: "smooth"
+                    });
+
+                }
+            );
+
+        }
+
+
+        // =====================================================
+        // MENU DO PERFIL
+        // =====================================================
+
+        if (perfilBtn && menuPerfil) {
+
+            perfilBtn.addEventListener(
+                "click",
+                function () {
+
+                    menuPerfil.classList.toggle("ativo");
+
+                }
+            );
+
+        }
+
+
+        // =====================================================
+        // COMENTÁRIOS MAIS CURTIDOS
+        // =====================================================
+
+        async function carregarComentariosMaisCurtidos() {
+
+            const lista =
+                document.getElementById(
+                    "listaComentariosCurtidos"
+                );
+
+            try {
+
+                const resposta =
+                    await fetch(
+                        "http://localhost:3000/avaliacoes/mais-curtidas"
+                    );
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        "Erro ao buscar comentários."
+                    );
+
+                }
+
+                const avaliacoes =
+                    await resposta.json();
+
+                lista.innerHTML = "";
+
+
+                if (!avaliacoes.length) {
+
+                    lista.innerHTML =
+                        '<p class="sem-comentarios">' +
+                        'Nenhum comentário encontrado.' +
+                        '</p>';
+
+                    return;
+
+                }
+
+
+                for (const avaliacao of avaliacoes) {
+
+                    // =================================================
+                    // BUSCAR FILME
+                    // =================================================
+
+                    let filme = null;
+
+                    try {
+
+                        const respostaFilme =
+                            await fetch(
+                                "http://localhost:3000/filmes/id/" +
+                                avaliacao.filme_id
+                            );
+
+                        if (respostaFilme.ok) {
+
+                            filme =
+                                await respostaFilme.json();
+
+                        }
+
+                    } catch (erro) {
+
+                        console.error(
+                            "Erro ao buscar filme:",
+                            erro
+                        );
+
+                    }
+
+
+                    // =================================================
+                    // DADOS DO FILME
+                    // =================================================
+
+                    const titulo =
+                        filme?.title ||
+                        "Filme";
+
+                    const ano =
+                        filme?.release_date
+                            ? new Date(
+                                filme.release_date
+                            ).getFullYear()
+                            : "";
+
+                    const poster =
+                        filme?.poster_path
+                            ? "https://image.tmdb.org/t/p/w500" +
+                              filme.poster_path
+                            : "./assets/sem-poster.jpg";
+
+
+                    // =================================================
+                    // NOTA
+                    // =================================================
+
+                    const nota =
+                        Math.max(
+                            0,
+                            Math.min(
+                                5,
+                                Math.round(
+                                    Number(
+                                        avaliacao.nota
+                                    ) || 0
+                                )
+                            )
+                        );
+
+                    const estrelas =
+                        "★".repeat(nota);
+
+
+                    // =================================================
+                    // CURTIDAS
+                    // =================================================
+
+                    const curtidas =
+                        Number(
+                            avaliacao.curtidas
+                        ) || 0;
+
+
+                    // =================================================
+                    // USUÁRIO LOGADO
+                    // =================================================
+
+                    const usuarioLogado =
+                        JSON.parse(
+                            localStorage.getItem(
+                                "usuario"
+                            )
+                        );
+
+
+                    // =================================================
+                    // VERIFICAR DONO
+                    // =================================================
+
+                    const ehDono =
+                        usuarioLogado &&
+                        Number(usuarioLogado.id) ===
+                        Number(avaliacao.usuario_id);
+
+
+                    // =================================================
+                    // BOTÃO EXCLUIR
+                    // =================================================
+
+                    const botaoExcluir =
+                        ehDono
+                            ? `
+                                <button
+                                    class="btn-excluir-comentario"
+                                    type="button"
+                                >
+                                    🗑 Excluir
+                                </button>
+                              `
+                            : "";
+
+
+                    // =================================================
+                    // CRIAR ITEM
+                    // =================================================
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.classList.add(
+                        "comentario-item"
+                    );
+
+
+                    // =================================================
+                    // HTML DO COMENTÁRIO
+                    // =================================================
+
+                    item.innerHTML = `
+
+                        <img
+                            class="comentario-poster"
+                            src="${poster}"
+                            alt="${titulo}"
+                        >
+
+                        <div class="comentario-conteudo">
+
+                            <div class="comentario-filme">
+
+                                <h3>
+                                    ${titulo}
+                                </h3>
+
+                                ${
+                                    ano
+                                        ? `<span>${ano}</span>`
+                                        : ""
+                                }
+
+                            </div>
+
+
+                            <div class="comentario-usuario">
+
+                                <div class="comentario-foto">
+                                    👤
+                                </div>
+
+                                <strong>
+                                    ${avaliacao.nome || "Usuário"}
+                                </strong>
+
+                                <span class="comentario-estrelas">
+                                    ${estrelas}
+                                </span>
+
+                            </div>
+
+
+                            <p class="comentario-texto">
+                                ${avaliacao.comentario || ""}
+                            </p>
+
+
+                            <div class="acoes-comentario">
+
+                                <button
+                                    class="btn-curtir-comentario"
+                                    type="button"
+                                >
+
+                                    <span class="icone-coracao">
+                                        ♡
+                                    </span>
+
+                                    <span class="contador-curtidas">
+                                        ${curtidas}
+                                    </span>
+
+                                    <span class="texto-curtidas">
+                                        ${
+                                            curtidas === 1
+                                                ? "curtida"
+                                                : "curtidas"
+                                        }
+                                    </span>
+
+                                </button>
+
+                                ${botaoExcluir}
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+
+                    // =================================================
+                    // BOTÃO CURTIR
+                    // =================================================
+
+                    const botaoCurtir =
+                        item.querySelector(
+                            ".btn-curtir-comentario"
+                        );
+
+
+                    verificarCurtidaHome(
+                        avaliacao.id,
+                        botaoCurtir
+                    );
+
+
+                    if (botaoCurtir) {
+
+                        botaoCurtir.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                curtirComentarioHome(
+                                    avaliacao.id,
+                                    botaoCurtir
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+                    // =================================================
+                    // BOTÃO EXCLUIR
+                    // =================================================
+
+                    const botaoExcluirElemento =
+                        item.querySelector(
+                            ".btn-excluir-comentario"
+                        );
+
+
+                    if (botaoExcluirElemento) {
+
+                        botaoExcluirElemento.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                excluirComentarioHome(
+                                    avaliacao.id,
+                                    botaoExcluirElemento
+                                );
+
+                            }
+                        );
+
+                    }
+
+
+                    lista.appendChild(item);
+
+                }
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar comentários:",
+                    erro
+                );
+
+                lista.innerHTML =
+                    `<p class="sem-comentarios">
+                        Não foi possível carregar os comentários.
+                    </p>`;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // VERIFICAR CURTIDA
+        // =====================================================
+
+        async function verificarCurtidaHome(
+            avaliacaoId,
+            botao
+        ) {
+
+            const usuario =
+                JSON.parse(
+                    localStorage.getItem(
+                        "usuario"
+                    )
+                );
+
+            if (!usuario || !botao) {
+                return;
+            }
+
+
+            try {
+
+                const resposta =
+                    await fetch(
+                        `http://localhost:3000/avaliacoes/curtida/${usuario.id}/${avaliacaoId}`
+                    );
+
+                if (!resposta.ok) {
+                    return;
+                }
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (dados.curtiu) {
+
+                    botao.classList.add(
+                        "curtido"
+                    );
+
+                    const coracao =
+                        botao.querySelector(
+                            ".icone-coracao"
+                        );
+
+                    if (coracao) {
+
+                        coracao.textContent =
+                            "♥";
+
+                    }
+
+                }
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao verificar curtida:",
+                    erro
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CURTIR / DESCURTIR
+        // =====================================================
+
+        async function curtirComentarioHome(
+            avaliacaoId,
+            botao
+        ) {
+
+            const usuario =
+                JSON.parse(
+                    localStorage.getItem(
+                        "usuario"
+                    )
+                );
+
+
+            if (!usuario) {
+
+                alert(
+                    "Você precisa estar logado para curtir um comentário."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            const jaCurtiu =
+                botao.classList.contains(
+                    "curtido"
+                );
+
+
+            try {
+
+                botao.disabled = true;
+
+                let resposta;
+
+
+                if (jaCurtiu) {
+
+                    resposta =
+                        await fetch(
+                            "http://localhost:3000/avaliacoes/descurtir",
+                            {
+                                method: "DELETE",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    usuario_id:
+                                        usuario.id,
+
+                                    avaliacao_id:
+                                        avaliacaoId
+                                })
+                            }
+                        );
+
+                } else {
+
+                    resposta =
+                        await fetch(
+                            "http://localhost:3000/avaliacoes/curtir",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    usuario_id:
+                                        usuario.id,
+
+                                    avaliacao_id:
+                                        avaliacaoId
+                                })
+                            }
+                        );
+
+                }
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        dados.erro ||
+                        "Erro ao alterar curtida."
+                    );
+
+                }
+
+
+                // =================================================
+                // ATUALIZAR QUANTIDADE
+                // =================================================
+
+                const respostaCurtidas =
+                    await fetch(
+                        `http://localhost:3000/avaliacoes/curtidas/${avaliacaoId}`
+                    );
+
+
+                const dadosCurtidas =
+                    await respostaCurtidas.json();
+
+
+                const quantidade =
+                    Number(
+                        dadosCurtidas.curtidas
+                    ) || 0;
+
+
+                const contador =
+                    botao.querySelector(
+                        ".contador-curtidas"
+                    );
+
+                const texto =
+                    botao.querySelector(
+                        ".texto-curtidas"
+                    );
+
+                const coracao =
+                    botao.querySelector(
+                        ".icone-coracao"
+                    );
+
+
+                if (contador) {
+
+                    contador.textContent =
+                        quantidade;
+
+                }
+
+
+                if (texto) {
+
+                    texto.textContent =
+                        quantidade === 1
+                            ? "curtida"
+                            : "curtidas";
+
+                }
+
+
+                if (jaCurtiu) {
+
+                    botao.classList.remove(
+                        "curtido"
+                    );
+
+                    if (coracao) {
+                        coracao.textContent =
+                            "♡";
+                    }
+
+                } else {
+
+                    botao.classList.add(
+                        "curtido"
+                    );
+
+                    if (coracao) {
+                        coracao.textContent =
+                            "♥";
+                    }
+
+                }
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao curtir comentário:",
+                    erro
+                );
+
+                alert(
+                    erro.message ||
+                    "Não foi possível alterar a curtida."
+                );
+
+            } finally {
+
+                botao.disabled = false;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // EXCLUIR COMENTÁRIO
+        // =====================================================
+
+        async function excluirComentarioHome(
+            avaliacaoId,
+            botao
+        ) {
+
+            const usuario =
+                JSON.parse(
+                    localStorage.getItem(
+                        "usuario"
+                    )
+                );
+
+
+            if (!usuario) {
+                return;
+            }
+
+
+            const confirmar =
+                confirm(
+                    "Tem certeza que deseja excluir este comentário?"
+                );
+
+
+            if (!confirmar) {
+                return;
+            }
+
+
+            try {
+
+                botao.disabled = true;
+
+
+                const resposta =
+                    await fetch(
+                        `http://localhost:3000/avaliacoes/${avaliacaoId}`,
+                        {
+                            method: "DELETE",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                usuario_id:
+                                    usuario.id
+                            })
+                        }
+                    );
+
+
+                const dados =
+                    await resposta.json();
+
+
+                if (!resposta.ok) {
+
+                    throw new Error(
+                        dados.erro ||
+                        "Erro ao excluir avaliação."
+                    );
+
+                }
+
+
+                await carregarComentariosMaisCurtidos();
+
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao excluir comentário:",
+                    erro
+                );
+
+                alert(
+                    erro.message ||
+                    "Não foi possível excluir o comentário."
+                );
+
+                botao.disabled = false;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // BUSCAR FILMES
+        // =====================================================
+
+        fetch(
+            "http://localhost:3000/filmes"
+        )
+
+        .then(res => {
+
+            if (!res.ok) {
+
+                throw new Error(
+                    `Erro HTTP: ${res.status}`
+                );
+
+            }
+
+            return res.json();
+
+        })
+
+        .then(dados => {
+
+            filmes = dados;
+
+            console.log(
+                "Filmes dos cards:",
+                filmes
+            );
+
+            criarCards(filmes);
+
+        })
+
+        .catch(erro => {
+
+            console.error(
+                "Erro ao buscar filmes:",
+                erro
+            );
+
+        });
+
+
+        // =====================================================
+        // BANNER
+        // =====================================================
+
+        fetch(
+            "http://localhost:3000/filmes/banner"
+        )
+
+        .then(res => {
+
+            if (!res.ok) {
+
+                throw new Error(
+                    `Erro HTTP: ${res.status}`
+                );
+
+            }
+
+            return res.json();
+
+        })
+
+        .then(filmesBanner => {
+
+            console.log(
+                "Filmes do banner:",
+                filmesBanner
+            );
+
+
+            if (!filmesBanner.length) {
+
+                console.log(
+                    "Nenhum filme disponível para o banner."
+                );
+
+                return;
+
+            }
+
+
+            let indiceBanner = 0;
+
+
+            function trocarBanner() {
+
+                const filme =
+                    filmesBanner[indiceBanner];
+
+
+                if (!filme) {
+                    return;
+                }
+
+
+                const bannerPrincipal =
+                    document.getElementById(
+                        "bannerPrincipal"
+                    );
+
+                const bannerDescricao =
+                    document.getElementById(
+                        "bannerDescricao"
+                    );
+
+                const btnExplorar =
+                    document.getElementById(
+                        "btnExplorar"
+                    );
+
+
+                // =================================================
+                // CLIQUE NO BANNER
+                // =================================================
+
+                bannerPrincipal.onclick =
+                    function (event) {
+
+                        if (
+                            event.target.closest(
+                                "#btnExplorar"
+                            )
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const usuario =
+                            localStorage.getItem(
+                                "usuario"
+                            );
+
+
+                        if (usuario) {
+
+                            window.location.href =
+                                "avaliacao.html?id=" +
+                                filme.id;
+
+                        } else {
+
+                            window.location.href =
+                                "login.html";
+
+                        }
+
+                    };
+
+
+                // =================================================
+                // IMAGEM
+                // =================================================
+
+                if (filme.backdrop_path) {
+
+                    bannerPrincipal.style.backgroundImage =
+
+                        `linear-gradient(
+                            to right,
+                            rgba(9, 12, 42, 0.95),
+                            rgba(9, 12, 42, 0.2)
+                        ),
+                        url(https://image.tmdb.org/t/p/original${filme.backdrop_path})`;
+
+                }
+
+
+                // =================================================
+                // DESCRIÇÃO
+                // =================================================
+
+                bannerDescricao.textContent =
+                    filme.overview ||
+                    "Descubra filmes incríveis no CineTrack.";
+
+
+                // =================================================
+                // EXPLORAR
+                // =================================================
+
+                btnExplorar.onclick =
+                    function () {
+
+                        window.location.href =
+                            "Filmes.html";
+
+                    };
+
+            }
+
+
+            trocarBanner();
+
+
+            setInterval(
+                function () {
+
+                    indiceBanner++;
+
+                    if (
+                        indiceBanner >=
+                        filmesBanner.length
+                    ) {
+
+                        indiceBanner = 0;
+
+                    }
+
+                    trocarBanner();
+
+                },
+                7000
+            );
+
+        })
+
+        .catch(erro => {
+
+            console.error(
+                "Erro ao carregar filmes do banner:",
+                erro
+            );
+
+        });
+
+
+        // =====================================================
+        // CRIAR CARDS
+        // =====================================================
+
+        function criarCards(filmes) {
+
+            carrossel.innerHTML = "";
+
+
+            filmes
+                .slice(0, 10)
+                .forEach(
+                    function (filme) {
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        card.classList.add(
+                            "card"
+                        );
+
+
+                        // =================================================
+                        // POSTER
+                        // =================================================
+
+                        const poster =
+                            filme.poster_path
+                                ? "https://image.tmdb.org/t/p/w500" +
+                                  filme.poster_path
+                                : "./assets/sem-poster.jpg";
+
+
+                        // =================================================
+                        // HTML DO CARD
+                        // =================================================
+
+                        card.innerHTML = `
+
+                            <img
+                                class="card-img"
+                                src="${poster}"
+                                alt="${filme.title}"
+                            >
+
+                            <h3>
+                                ${filme.title}
+                            </h3>
+
+                            <p>
+                                ${
+                                    filme.overview ||
+                                    "Descrição não disponível."
+                                }
+                            </p>
+
+                            <span class="preco">
+                                ⭐ ${
+                                    filme.vote_average
+                                        ? Number(
+                                            filme.vote_average
+                                          ).toFixed(1)
+                                        : "N/A"
+                                }/10
+                            </span>
+
+                            <button
+                                class="btn-favoritar"
+                                type="button"
+                            >
+                                ♡ Favoritar
+                            </button>
+
+                            <button
+                                class="btn-comprar btn-lista"
+                                type="button"
+                            >
+                                + Adicionar à Lista
+                            </button>
+
+                            <button
+                                class="btn-comprar btn-avaliar"
+                                type="button"
+                            >
+                                ⭐ Avaliar
+                            </button>
+
+                        `;
+
+
+                        // =================================================
+                        // BOTÕES
+                        // =================================================
+
+                        const botaoFavoritar =
+                            card.querySelector(
+                                ".btn-favoritar"
+                            );
+
+                        const botaoLista =
+                            card.querySelector(
+                                ".btn-lista"
+                            );
+
+
+                        // =================================================
+                        // VERIFICAR FAVORITO
+                        // =================================================
+
+                        async function verificarFavorito() {
+
+                            const usuario =
+                                JSON.parse(
+                                    localStorage.getItem(
+                                        "usuario"
+                                    )
+                                );
+
+
+                            if (!usuario) {
+                                return;
+                            }
+
+
+                            try {
+
+                                const resposta =
+                                    await fetch(
+                                        `http://localhost:3000/favoritos/${usuario.id}/${filme.id}`
+                                    );
+
+
+                                if (!resposta.ok) {
+                                    return;
+                                }
+
+
+                                const dados =
+                                    await resposta.json();
+
+
+                                if (dados.favorito) {
+
+                                    botaoFavoritar.textContent =
+                                        "♥ Favoritado";
+
+                                } else {
+
+                                    botaoFavoritar.textContent =
+                                        "♡ Favoritar";
+
+                                }
+
+                            } catch (erro) {
+
+                                console.error(
+                                    "Erro ao verificar favorito:",
+                                    erro
+                                );
+
+                            }
+
+                        }
+
+
+                        verificarFavorito();
+
+
+                        // =================================================
+                        // VERIFICAR LISTA
+                        // =================================================
+
+                        async function verificarLista() {
+
+                            const usuario =
+                                JSON.parse(
+                                    localStorage.getItem(
+                                        "usuario"
+                                    )
+                                );
+
+
+                            if (!usuario) {
+                                return;
+                            }
+
+
+                            try {
+
+                                const resposta =
+                                    await fetch(
+                                        `http://localhost:3000/lista/${usuario.id}/${filme.id}`
+                                    );
+
+
+                                if (!resposta.ok) {
+                                    return;
+                                }
+
+
+                                const dados =
+                                    await resposta.json();
+
+
+                                if (dados.naLista) {
+
+                                    botaoLista.textContent =
+                                        "✓ Na Lista";
+
+                                } else {
+
+                                    botaoLista.textContent =
+                                        "+ Adicionar à Lista";
+
+                                }
+
+                            } catch (erro) {
+
+                                console.error(
+                                    "Erro ao verificar lista:",
+                                    erro
+                                );
+
+                            }
+
+                        }
+
+
+                        verificarLista();
+
+
+                        // =================================================
+                        // ADICIONAR / REMOVER DA LISTA
+                        // =================================================
+
+                        botaoLista.addEventListener(
+                            "click",
+                            async function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+
+                                const usuario =
+                                    JSON.parse(
+                                        localStorage.getItem(
+                                            "usuario"
+                                        )
+                                    );
+
+
+                                if (!usuario) {
+
+                                    alert(
+                                        "Você precisa estar logado para adicionar um filme à lista."
+                                    );
+
+                                    return;
+
+                                }
+
+
+                                const estaNaLista =
+                                    botaoLista.textContent.includes(
+                                        "Na Lista"
+                                    );
+
+
+                                try {
+
+                                    botaoLista.disabled = true;
+
+                                    let resposta;
+
+
+                                    if (estaNaLista) {
+
+                                        resposta =
+                                            await fetch(
+                                                "http://localhost:3000/lista",
+                                                {
+                                                    method: "DELETE",
+
+                                                    headers: {
+                                                        "Content-Type":
+                                                            "application/json"
+                                                    },
+
+                                                    body: JSON.stringify({
+                                                        usuario_id:
+                                                            usuario.id,
+
+                                                        filme_id:
+                                                            filme.id
+                                                    })
+                                                }
+                                            );
+
+                                    } else {
+
+                                        resposta =
+                                            await fetch(
+                                                "http://localhost:3000/lista",
+                                                {
+                                                    method: "POST",
+
+                                                    headers: {
+                                                        "Content-Type":
+                                                            "application/json"
+                                                    },
+
+                                                    body: JSON.stringify({
+                                                        usuario_id:
+                                                            usuario.id,
+
+                                                        filme_id:
+                                                            filme.id
+                                                    })
+                                                }
+                                            );
+
+                                    }
+
+
+                                    const dados =
+                                        await resposta.json();
+
+
+                                    if (!resposta.ok) {
+
+                                        throw new Error(
+                                            dados.erro ||
+                                            "Erro ao alterar lista"
+                                        );
+
+                                    }
+
+
+                                    if (estaNaLista) {
+
+                                        botaoLista.textContent =
+                                            "+ Adicionar à Lista";
+
+                                    } else {
+
+                                        botaoLista.textContent =
+                                            "✓ Na Lista";
+
+                                    }
+
+                                } catch (erro) {
+
+                                    console.error(
+                                        "Erro ao alterar lista:",
+                                        erro
+                                    );
+
+                                    alert(
+                                        "Não foi possível alterar a lista."
+                                    );
+
+                                } finally {
+
+                                    botaoLista.disabled =
+                                        false;
+
+                                }
+
+                            }
+                        );
+
+
+                        // =================================================
+                        // FAVORITAR / DESFAVORITAR
+                        // =================================================
+
+                        botaoFavoritar.addEventListener(
+                            "click",
+                            async function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+
+                                const usuario =
+                                    JSON.parse(
+                                        localStorage.getItem(
+                                            "usuario"
+                                        )
+                                    );
+
+
+                                if (!usuario) {
+
+                                    alert(
+                                        "Você precisa estar logado para favoritar um filme."
+                                    );
+
+                                    return;
+
+                                }
+
+
+                                const estaFavoritado =
+                                    botaoFavoritar.textContent.includes(
+                                        "Favoritado"
+                                    );
+
+
+                                try {
+
+                                    botaoFavoritar.disabled =
+                                        true;
+
+                                    let resposta;
+
+
+                                    if (estaFavoritado) {
+
+                                        resposta =
+                                            await fetch(
+                                                "http://localhost:3000/favoritos",
+                                                {
+                                                    method: "DELETE",
+
+                                                    headers: {
+                                                        "Content-Type":
+                                                            "application/json"
+                                                    },
+
+                                                    body: JSON.stringify({
+                                                        usuario_id:
+                                                            usuario.id,
+
+                                                        filme_id:
+                                                            filme.id
+                                                    })
+                                                }
+                                            );
+
+                                    } else {
+
+                                        resposta =
+                                            await fetch(
+                                                "http://localhost:3000/favoritos",
+                                                {
+                                                    method: "POST",
+
+                                                    headers: {
+                                                        "Content-Type":
+                                                            "application/json"
+                                                    },
+
+                                                    body: JSON.stringify({
+                                                        usuario_id:
+                                                            usuario.id,
+
+                                                        filme_id:
+                                                            filme.id
+                                                    })
+                                                }
+                                            );
+
+                                    }
+
+
+                                    const dados =
+                                        await resposta.json();
+
+
+                                    if (!resposta.ok) {
+
+                                        throw new Error(
+                                            dados.erro ||
+                                            "Erro ao alterar favorito"
+                                        );
+
+                                    }
+
+
+                                    if (estaFavoritado) {
+
+                                        botaoFavoritar.textContent =
+                                            "♡ Favoritar";
+
+                                    } else {
+
+                                        botaoFavoritar.textContent =
+                                            "♥ Favoritado";
+
+                                    }
+
+                                } catch (erro) {
+
+                                    console.error(
+                                        "Erro ao alterar favorito:",
+                                        erro
+                                    );
+
+                                    alert(
+                                        "Não foi possível alterar o favorito."
+                                    );
+
+                                } finally {
+
+                                    botaoFavoritar.disabled =
+                                        false;
+
+                                }
+
+                            }
+                        );
+
+
+                        // =================================================
+                        // CLIQUE NO CARD
+                        // =================================================
+
+                        card.addEventListener(
+                            "click",
+                            function () {
+
+                                window.location.href =
+                                    "filme.html?id=" +
+                                    filme.id;
+
+                            }
+                        );
+
+
+                        // =================================================
+                        // BOTÃO AVALIAR
+                        // =================================================
+
+                        const botaoAvaliar =
+                            card.querySelector(
+                                ".btn-avaliar"
+                            );
+
+
+                        botaoAvaliar.addEventListener(
+                            "click",
+                            function (event) {
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                window.location.href =
+                                    "filme.html?id=" +
+                                    filme.id;
+
+                            }
+                        );
+
+
+                        carrossel.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // =====================================================
+        // PESQUISA DE FILMES
+        // =====================================================
+
+        if (campoPesquisa) {
+
+            campoPesquisa.addEventListener(
+                "input",
+                function () {
+
+                    const texto =
+                        campoPesquisa.value
+                            .trim()
+                            .toLowerCase();
+
+
+                    sugestoesPesquisa.innerHTML =
+                        "";
+
+
+                    if (texto === "") {
+
+                        sugestoesPesquisa.style.display =
+                            "none";
+
+                        return;
+
+                    }
+
+
+                    const resultados =
+                        filmes.filter(
+                            function (filme) {
+
+                                return filme.title &&
+                                    filme.title
+                                        .toLowerCase()
+                                        .includes(
+                                            texto
+                                        );
+
+                            }
+                        );
+
+
+                    resultados
+                        .slice(0, 5)
+                        .forEach(
+                            function (filme) {
+
+                                const sugestao =
+                                    document.createElement(
+                                        "div"
+                                    );
+
+
+                                sugestao.classList.add(
+                                    "sugestao"
+                                );
+
+
+                                if (filme.poster_path) {
+
+                                    const poster =
+                                        document.createElement(
+                                            "img"
+                                        );
+
+                                    poster.classList.add(
+                                        "poster-pesquisa"
+                                    );
+
+                                    poster.src =
+                                        "https://image.tmdb.org/t/p/w92" +
+                                        filme.poster_path;
+
+                                    poster.alt =
+                                        filme.title;
+
+                                    sugestao.appendChild(
+                                        poster
+                                    );
+
+                                }
+
+
+                                const titulo =
+                                    document.createElement(
+                                        "span"
+                                    );
+
+                                titulo.textContent =
+                                    filme.title;
+
+
+                                sugestao.appendChild(
+                                    titulo
+                                );
+
+
+                                sugestao.addEventListener(
+                                    "click",
+                                    function () {
+
+                                        campoPesquisa.value =
+                                            filme.title;
+
+                                        sugestoesPesquisa.innerHTML =
+                                            "";
+
+                                        sugestoesPesquisa.style.display =
+                                            "none";
+
+                                        window.location.href =
+                                            "avaliacao.html?id=" +
+                                            filme.id;
+
+                                    }
+                                );
+
+
+                                sugestoesPesquisa.appendChild(
+                                    sugestao
+                                );
+
+                            }
+                        );
+
+
+                    if (resultados.length > 0) {
+
+                        sugestoesPesquisa.style.display =
+                            "block";
+
+                    } else {
+
+                        sugestoesPesquisa.style.display =
+                            "none";
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        // =====================================================
+        // INICIAR COMENTÁRIOS
+        // =====================================================
+
+        carregarComentariosMaisCurtidos();
+
+    </script>
+
+
+    <!-- =====================================================
+         LOGIN / PERFIL / LOGOUT
+         ===================================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                // =================================================
+                // LOGIN
+                // =================================================
+
+                const usuario =
+                    localStorage.getItem(
+                        "usuario"
+                    );
+
+                const usuarioMenu =
+                    document.getElementById(
+                        "usuarioMenu"
+                    );
+
+                const btnEntrar =
+                    document.getElementById(
+                        "btnEntrar"
+                    );
+
+                const btnLista =
+                    document.getElementById(
+                        "btnLista"
+                    );
+
+                const btnPerfil =
+                    document.getElementById(
+                        "btnPerfil"
+                    );
+
+
+                // =================================================
+                // VERIFICAR LOGIN
+                // =================================================
+
+                if (usuario) {
+
+                    if (usuarioMenu) {
+
+                        usuarioMenu.style.display =
+                            "block";
+
+                    }
+
+                    if (btnEntrar) {
+
+                        btnEntrar.style.display =
+                            "none";
+
+                    }
+
+                    if (btnLista) {
+
+                        btnLista.style.display =
+                            "block";
+
+                    }
+
+                    if (btnPerfil) {
+
+                        btnPerfil.style.display =
+                            "block";
+
+                    }
+
+                } else {
+
+                    if (usuarioMenu) {
+
+                        usuarioMenu.style.display =
+                            "none";
+
+                    }
+
+                    if (btnEntrar) {
+
+                        btnEntrar.style.display =
+                            "block";
+
+                    }
+
+                    if (btnLista) {
+
+                        btnLista.style.display =
+                            "none";
+
+                    }
+
+                    if (btnPerfil) {
+
+                        btnPerfil.style.display =
+                            "none";
+
+                    }
+
+                }
+
+
+                // =================================================
+                // ENTRAR
+                // =================================================
+
+                if (btnEntrar) {
+
+                    btnEntrar.addEventListener(
+                        "click",
+                        function () {
+
+                            window.location.href =
+                                "login.html";
+
+                        }
+                    );
+
+                }
+
+
+                // =================================================
+                // SAIR
+                // =================================================
+
+                const btnSair =
+                    document.getElementById(
+                        "btnSair"
+                    );
+
+
+                if (btnSair) {
+
+                    btnSair.addEventListener(
+                        "click",
+                        function () {
+
+                            localStorage.removeItem(
+                                "usuario"
+                            );
+
+                            localStorage.removeItem(
+                                "fotoPerfil"
+                            );
+
+                            window.location.href =
+                                "index.html";
+
+                        }
+                    );
+
+                }
+
+
+                // =================================================
+                // FOTO DE PERFIL
+                // =================================================
+
+                const fotoPerfil =
+                    document.getElementById(
+                        "fotoPerfil"
+                    );
+
+                const imagemPerfil =
+                    document.getElementById(
+                        "imagemPerfil"
+                    );
+
+                const alterarFoto =
+                    document.getElementById(
+                        "alterarFoto"
+                    );
+
+
+                // =================================================
+                // CARREGAR FOTO SALVA
+                // =================================================
+
+                const fotoSalva =
+                    localStorage.getItem(
+                        "fotoPerfil"
+                    );
+
+
+                if (
+                    fotoSalva &&
+                    imagemPerfil
+                ) {
+
+                    imagemPerfil.src =
+                        fotoSalva;
+
+                }
+
+
+                // =================================================
+                // ALTERAR FOTO
+                // =================================================
+
+                if (
+                    alterarFoto &&
+                    fotoPerfil
+                ) {
+
+                    alterarFoto.addEventListener(
+                        "click",
+                        function () {
+
+                            fotoPerfil.click();
+
+                        }
+                    );
+
+                }
+
+
+                // =================================================
+                // ESCOLHER NOVA FOTO
+                // =================================================
+
+                if (
+                    fotoPerfil &&
+                    imagemPerfil
+                ) {
+
+                    fotoPerfil.addEventListener(
+                        "change",
+                        function () {
+
+                            const arquivo =
+                                fotoPerfil.files[0];
+
+
+                            if (!arquivo) {
+                                return;
+                            }
+
+
+                            const leitor =
+                                new FileReader();
+
+
+                            leitor.onload =
+                                function (evento) {
+
+                                    const foto =
+                                        evento.target.result;
+
+
+                                    imagemPerfil.src =
+                                        foto;
+
+
+                                    localStorage.setItem(
+                                        "fotoPerfil",
+                                        foto
+                                    );
+
+                                };
+
+
+                            leitor.readAsDataURL(
+                                arquivo
+                            );
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
 </body>
+
 </html>
-
-<botão onclick="window.location.href='login.html'">
-
- Logar
-
-</botão>

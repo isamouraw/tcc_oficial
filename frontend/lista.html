@@ -1,16 +1,56 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lista</title>
+    <title>Minha Lista - CineTrack</title>
 
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1> Lista de Filmes</h1>
+    <header class="cabecalho-filmes">
+
+        <div class="logo">CineTrack</div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="Filmes.html">Filmes</a>
+            <a href="lista.html" class="ativo">Minha Lista</a>
+            <a href="Perfil.html">Perfil</a>
+        </nav>
+
+    </header>
+
+
+    <main class="pagina-filmes">
+
+        <section class="titulo-filmes">
+
+            <span>MINHA LISTA</span>
+        
+            <h1>Filmes para assistir</h1>
+        
+            <p>
+                Aqui estão os filmes que você adicionou à sua lista.
+            </p>
+        
+        </section>
+
+
+        <section class="catalogo">
+
+            <div id="listaFilmes" class="grid-filmes"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="lista.js"></script>
 
 </body>
 

@@ -1,24 +1,73 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Filmes</title>
+    <title>Filmes - CineTrack</title>
 
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Catálogo de Filmes</h1>
+    <header class="cabecalho-filmes">
 
-    <button onclick="window.location.href='index.html'">Home</button>
+        <div class="logo">
+            CineTrack
+        </div>
 
-    <button onclick="window.location.href='minha-lista.html'">Minha Lista</button>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="Filmes.html" class="ativo">Filmes</a>
+            <a href="lista.html">Minha Lista</a>
+            <a href="Perfil.html">Perfil</a>
+        </nav>
+
+    </header>
+
+
+    <main class="pagina-filmes">
+
+        <section class="titulo-filmes">
+
+            <span>CATÁLOGO</span>
+
+            <h1>Encontre seu próximo filme</h1>
+
+            <p>
+                Explore filmes populares e descubra novas histórias.
+            </p>
+
+        </section>
+
+
+        <!-- BARRA DE PESQUISA -->
+        <div class="barra-pesquisa">
+
+            <input
+                type="text"
+                id="pesquisaFilme"
+                placeholder="Pesquisar filme..."
+            >
+
+            <button type="button" id="btnPesquisar">
+            </button>
+
+        </div>
+
+
+        <section class="catalogo">
+
+            <div id="listaFilmes" class="grid-filmes"></div>
+
+        </section>
+
+    </main>
+
+
+    <script src="catalogo.js"></script>
 
 </body>
 

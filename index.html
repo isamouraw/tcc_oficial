@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CineTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+
+    <h1>CineTrack</h1>
+
+    <nav class="menu">
+
+        <button onclick="window.location.href='index.html'">
+            Home
+        </button>
+
+        <button onclick="window.location.href='Filmes.html'">
+            Filmes
+        </button>
+
+        <button onclick="window.location.href='lista.html'">
+            Lista
+        </button>
+
+        <button onclick="window.location.href='Perfil.html'">
+            Perfil
+        </button>
+
+    </nav>
+
+
+    <!-- PESQUISA -->
+
+    <div class="pesquisa">
+
+        <input
+            type="text"
+            id="campoPesquisa"
+            placeholder="Buscar filmes..."
+            autocomplete="off"
+        >
+
+        <div id="sugestoesPesquisa"></div>
+
+    </div>
+
+
+    <!-- MENU DO USUÁRIO -->
+
+    <div class="usuario-menu">
+
+        <input
+            type="file"
+            id="fotoPerfil"
+            accept="image/*"
+        >
+
+        <button class="perfil-btn" id="perfilBtn">
+
+            <img
+                id="imagemPerfil"
+                src=""
+                alt="Foto de perfil"
+            >
+
+        </button>
+
+        <div class="menu-dropdown" id="menuPerfil">
+
+            <button id="alterarFoto">
+                📷 Alterar foto
+            </button>
+
+            <a href="perfil.html?editar=true">
+                Editar Perfil
+            </a>
+
+            <a href="favoritos.html">
+                Favoritos
+            </a>
+
+            <a href="avaliacoes.html">
+                Avaliações
+            </a>
+
+            <a href="lista.html">
+                Lista
+            </a>
+
+            <a href="configuracoes.html">
+                Configurações
+            </a>
+
+            <a href="login.html">
+                Sair da Conta
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- BANNER -->
+
+<section class="banner">
+
+    <h2>Encontre Filmes</h2>
+
+    <p>
+        Uma plataforma interativa para amantes do entretenimento
+    </p>
+
+    <button>
+        Explorar Catálogo
+    </button>
+
+</section>
+
+
+<section class="filtros">
+</section>
+
+
+<!-- FILMES -->
+
+<section id="filmes" class="container">
+
+    <h2>Filmes em Destaque</h2>
+
+    <div class="carrossel-wrapper">
+
+        <button
+            class="btn-seta"
+            id="btn-prev"
+            type="button"
+        >
+            &#10094;
+        </button>
+
+
+        <!-- OS FILMES DA API SERÃO COLOCADOS AQUI -->
+
+        <div
+            class="grid-cards"
+            id="carrossel-cards"
+        >
+        </div>
+
+
+        <button
+            class="btn-seta"
+            id="btn-next"
+            type="button"
+        >
+            &#10095;
+        </button>
+
+    </div>
+
+</section>
+
+
+<script>
+
+// =====================================================
+// CARROSSEL
+// =====================================================
+
+const carrossel =
+    document.getElementById("carrossel-cards");
+
+const btnNext =
+    document.getElementById("btn-next");
+
+const btnPrev =
+    document.getElementById("btn-prev");
+
+
+btnNext.addEventListener("click", function () {
+
+    carrossel.scrollBy({
+
+        left: 460,
+
+        behavior: "smooth"
+
+    });
+
+});
+
+
+btnPrev.addEventListener("click", function () {
+
+    carrossel.scrollBy({
+
+        left: -460,
+
+        behavior: "smooth"
+
+    });
+
+});
+
+
+// =====================================================
+// MENU DO PERFIL
+// =====================================================
+
+const perfilBtn =
+    document.getElementById("perfilBtn");
+
+const menuPerfil =
+    document.getElementById("menuPerfil");
+
+const fotoPerfil =
+    document.getElementById("fotoPerfil");
+
+const imagemPerfil =
+    document.getElementById("imagemPerfil");
+
+const alterarFoto =
+    document.getElementById("alterarFoto");
+
+
+perfilBtn.addEventListener("click", function () {
+
+    menuPerfil.classList.toggle("ativo");
+
+});
+
+
+alterarFoto.addEventListener("click", function () {
+
+    fotoPerfil.click();
+
+});
+
+
+fotoPerfil.addEventListener("change", function () {
+
+    const arquivo = fotoPerfil.files[0];
+
+    if (arquivo) {
+
+        const leitor = new FileReader();
+
+        leitor.onload = function (event) {
+
+            imagemPerfil.src =
+                event.target.result;
+
+            localStorage.setItem(
+                "fotoPerfil",
+                event.target.result
+            );
+
+        };
+
+        leitor.readAsDataURL(arquivo);
+
+    }
+
+});
+
+
+const fotoSalva =
+    localStorage.getItem("fotoPerfil");
+
+
+if (fotoSalva) {
+
+    imagemPerfil.src = fotoSalva;
+
+}
+
+
+// =====================================================
+// PESQUISA
+// =====================================================
+
+const campoPesquisa =
+    document.getElementById("campoPesquisa");
+
+const sugestoesPesquisa =
+    document.getElementById("sugestoesPesquisa");
+
+let filmes = [];
+
+
+// =====================================================
+// BUSCAR FILMES DA SUA API
+// =====================================================
+
+fetch("http://localhost:3000/filmes")
+
+    .then(function (resposta) {
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                `Erro HTTP: ${resposta.status}`
+            );
+
+        }
+
+        return resposta.json();
+
+    })
+
+    .then(function (dados) {
+
+        filmes = dados;
+
+        console.log(
+            "Filmes recebidos:",
+            filmes
+        );
+
+
+        // CRIA OS CARDS
+
+        criarCards(filmes);
+
+    })
+
+    .catch(function (erro) {
+
+        console.error(
+            "Erro ao buscar filmes:",
+            erro
+        );
+
+    });
+
+
+// =====================================================
+// CRIAR CARDS DOS FILMES
+// =====================================================
+
+function criarCards(filmes) {
+
+    carrossel.innerHTML = "";
+
+
+    filmes.slice(0, 10).forEach(function (filme) {
+
+        const card =
+            document.createElement("div");
+
+        card.classList.add("card");
+
+
+        // =============================================
+        // POSTER
+        // =============================================
+
+        let poster;
+
+        if (filme.poster_path) {
+
+            poster =
+                "https://image.tmdb.org/t/p/w500" +
+                filme.poster_path;
+
+        } else {
+
+            poster =
+                "./assets/sem-poster.jpg";
+
+        }
+
+
+        // =============================================
+        // CARD
+        // =============================================
+
+        card.innerHTML = `
+
+            <img
+                class="card-img"
+                src="${poster}"
+                alt="${filme.title}"
+            >
+
+            <h3>
+                ${filme.title}
+            </h3>
+
+            <p>
+                ${
+                    filme.overview ||
+                    "Descrição não disponível."
+                }
+            </p>
+
+            <span class="preco">
+
+                ⭐ ${
+                    filme.vote_average
+                    ? Number(filme.vote_average).toFixed(1)
+                    : "N/A"
+                }/10
+
+            </span>
+
+            <button class="btn-favoritar">
+
+                ♡ Favoritar
+
+            </button>
+
+            <button class="btn-comprar">
+
+                Avaliar
+
+            </button>
+
+        `;
+
+
+        carrossel.appendChild(card);
+
+    });
+
+}
+
+
+// =====================================================
+// PESQUISA DE FILMES
+// =====================================================
+
+campoPesquisa.addEventListener(
+    "input",
+    function () {
+
+        const texto =
+            campoPesquisa.value
+                .trim()
+                .toLowerCase();
+
+
+        sugestoesPesquisa.innerHTML = "";
+
+
+        // Campo vazio
+
+        if (texto === "") {
+
+            sugestoesPesquisa.style.display =
+                "none";
+
+            return;
+
+        }
+
+
+        // =============================================
+        // FILTRAR
+        // =============================================
+
+        const resultados =
+            filmes.filter(function (filme) {
+
+                return filme.title
+                    .toLowerCase()
+                    .includes(texto);
+
+            });
+
+
+        console.log(
+            "Resultados encontrados:",
+            resultados
+        );
+
+
+        // =============================================
+        // CRIAR SUGESTÕES
+        // =============================================
+
+        resultados
+            .slice(0, 5)
+            .forEach(function (filme) {
+
+
+                const sugestao =
+                    document.createElement("div");
+
+
+                sugestao.classList.add(
+                    "sugestao"
+                );
+
+
+                // POSTER DA PESQUISA
+
+                if (filme.poster_path) {
+
+                    const poster =
+                        document.createElement("img");
+
+                    poster.classList.add(
+                        "poster-pesquisa"
+                    );
+
+                    poster.src =
+                        "https://image.tmdb.org/t/p/w92" +
+                        filme.poster_path;
+
+                    poster.alt =
+                        filme.title;
+
+                    sugestao.appendChild(
+                        poster
+                    );
+
+                }
+
+
+                // TÍTULO
+
+                const titulo =
+                    document.createElement("span");
+
+                titulo.textContent =
+                    filme.title;
+
+                sugestao.appendChild(
+                    titulo
+                );
+
+
+                // =================================
+                // CLICAR NO FILME
+                // =================================
+
+                sugestao.addEventListener(
+                    "click",
+                    function () {
+
+                        campoPesquisa.value =
+                            filme.title;
+
+                        sugestoesPesquisa.innerHTML =
+                            "";
+
+                        sugestoesPesquisa.style.display =
+                            "none";
+
+                        selecionarFilme(
+                            filme
+                        );
+
+                    }
+                );
+
+
+                sugestoesPesquisa.appendChild(
+                    sugestao
+                );
+
+            });
+
+
+        // =============================================
+        // MOSTRAR / ESCONDER
+        // =============================================
+
+        if (resultados.length > 0) {
+
+            sugestoesPesquisa.style.display =
+                "block";
+
+        } else {
+
+            sugestoesPesquisa.style.display =
+                "none";
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// FILME SELECIONADO
+// =====================================================
+
+function selecionarFilme(filme) {
+
+    console.log(
+        "FILME SELECIONADO:",
+        filme
+    );
+
+    console.log(
+        "ID:",
+        filme.id
+    );
+
+    console.log(
+        "Título:",
+        filme.title
+    );
+
+    console.log(
+        "Poster:",
+        filme.poster_path
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>

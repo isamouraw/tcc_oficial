@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Avaliar Filme - CineTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="cabecalho-filmes">
+
+        <div class="logo">
+            CineTrack
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="Filmes.html">Filmes</a>
+            <a href="lista.html">Minha Lista</a>
+            <a href="Perfil.html">Perfil</a>
+        </nav>
+
+    </header>
+
+
+    <main class="pagina-avaliacao">
+
+        <!-- INFORMAÇÕES DO FILME -->
+        <div id="filmeAvaliacao">
+            <p>Carregando filme...</p>
+        </div>
+
+
+        <!-- ÁREA PARA FAZER A AVALIAÇÃO -->
+        <section class="caixa-avaliacao">
+
+            <h1>Avalie este filme</h1>
+
+            <p>Escolha uma nota:</p>
+
+            <div class="estrelas">
+
+                <button type="button" data-nota="1">★</button>
+                <button type="button" data-nota="2">★</button>
+                <button type="button" data-nota="3">★</button>
+                <button type="button" data-nota="4">★</button>
+                <button type="button" data-nota="5">★</button>
+
+            </div>
+
+            <p id="notaTexto">Nenhuma nota selecionada</p>
+
+
+            <textarea
+                id="comentario"
+                placeholder="Escreva o que você achou do filme..."
+            ></textarea>
+
+
+            <button
+                type="button"
+                id="btnEnviarAvaliacao"
+                class="btn-enviar-avaliacao"
+            >
+                Enviar avaliação
+            </button>
+
+        </section>
+
+
+        <!-- AVALIAÇÕES DOS USUÁRIOS -->
+        <section class="lista-avaliacoes">
+
+            <h2>💬 Avaliações dos usuários</h2>
+
+            <div id="listaAvaliacoes">
+                <p>Carregando avaliações...</p>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="avaliacao.js"></script>
+
+</body>
+
+</html>
