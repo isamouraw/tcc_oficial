@@ -217,6 +217,20 @@ function excluirAvaliacao(avaliacao_id, usuario_id, callback) {
 }
 
 
+function calcularMediaFilme(filme_id, callback) {
+
+    const sql = `
+        SELECT
+            ROUND(AVG(nota), 1) AS media,
+            COUNT(nota) AS total_avaliacoes
+        FROM avaliacoes
+        WHERE filme_id = ?
+    `;
+
+    conexao.query(sql, [filme_id], callback);
+}
+
+
 module.exports = {
 
     adicionarAvaliacao,
@@ -227,6 +241,7 @@ module.exports = {
     contarCurtidas,
     listarAvaliacoesMaisCurtidas,
     verificarCurtida,
-    excluirAvaliacao
+    excluirAvaliacao,
+    calcularMediaFilme
 
 };

@@ -22,6 +22,8 @@ router.delete("/:avaliacao_id", avaliacaoController.excluirAvaliacao);
 
 // DEIXE ESTA POR ÚLTIMO
 
+router.get("/media/:filme_id", avaliacaoController.calcularMediaFilme);
+
 router.get("/:filme_id", avaliacaoController.listarAvaliacoes);
 
 module.exports = router;

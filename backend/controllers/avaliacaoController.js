@@ -367,6 +367,21 @@ function excluirAvaliacao(req, res) {
 
 }
 
+function calcularMediaFilme(req, res) {
+
+    const { filme_id } = req.params;
+
+    avaliacaoModel.calcularMediaFilme(filme_id, (erro, resultado) => {
+
+        if (erro) {
+            return res.status(500).json({ erro: "Erro ao calcular média." });
+        }
+
+        res.json(resultado[0]);
+
+    });
+
+}
 
 // =====================================================
 // EXPORTAÇÕES
@@ -382,6 +397,7 @@ module.exports = {
     contarCurtidas,
     listarAvaliacoesMaisCurtidas,
     verificarCurtida,
-    excluirAvaliacao
+    excluirAvaliacao,
+    calcularMediaFilme
 
 };
