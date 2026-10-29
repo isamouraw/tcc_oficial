@@ -14,6 +14,48 @@ let idFilmeAtual = null;
 // CARREGAR FILME
 // =====================================================
 
+
+async function carregarMediaFilme(idFilme) {
+
+    const elemento = document.getElementById("mediaCineTrack");
+
+    try {
+
+        const resposta = await fetch(
+            "http://localhost:3000/avaliacoes/media/" + idFilme
+        );
+
+        if (!resposta.ok) {
+            throw new Error("Não foi possível buscar a média.");
+        }
+
+        const dados = await resposta.json();
+
+        const media = Number(dados.media);
+        const total = Number(dados.total_avaliacoes) || 0;
+
+        if (total === 0 || dados.media === null) {
+            elemento.textContent =
+                "⭐ Nota dos usuários CineTrack: ainda sem avaliações (0 avaliações)";
+            return;
+        }
+
+        elemento.textContent =
+            "⭐ Nota dos usuários CineTrack: " +
+            media.toFixed(1) + "/5 (" +
+            total + (total === 1 ? " avaliação)" : " avaliações)");
+
+    } catch (erro) {
+
+        console.error("Erro ao carregar média:", erro);
+
+        elemento.textContent =
+            "Nota dos usuários CineTrack indisponível.";
+
+    }
+}
+
+
 async function carregarFilme() {
 
     try {
@@ -71,9 +113,13 @@ async function carregarFilme() {
                         "Descrição não disponível."}
                     </p>
 
-                    <p class="nota-filme">
-                        ⭐ ${Number(filme.vote_average).toFixed(1)}/10
-                    </p>
+                   <p class="nota-filme">
+    ⭐ Nota TMDB: ${Number(filme.vote_average).toFixed(1)}/10
+</p>
+
+<p id="mediaCineTrack">
+    ⭐ Nota dos usuários CineTrack: calculando...
+</p>
 
                 </div>
 
@@ -83,6 +129,8 @@ async function carregarFilme() {
 
 
         configurarEstrelas();
+
+        carregarMediaFilme(idFilme);
 
         carregarAvaliacoes(idFilme);
 
@@ -230,6 +278,8 @@ document
 
 
             carregarAvaliacoes(idFilmeAtual);
+
+            carregarMediaFilme(idFilmeAtual);
 
 
         } catch (erro) {

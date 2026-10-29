@@ -3345,3 +3345,225 @@ footer {
     border-radius: 12px; 
 
 }
+
+
+/* =========================================
+   LOGIN E CADASTRO — ESTÉTICA CINETRACK
+   ========================================= */
+
+#login {
+    min-height: 100vh;
+    height: auto;
+    padding: 35px 20px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: Arial, sans-serif;
+    color: #f5f5fa;
+
+    background:
+        radial-gradient(
+            circle at top left,
+            rgba(83, 92, 194, 0.20),
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at bottom right,
+            rgba(112, 64, 190, 0.16),
+            transparent 40%
+        ),
+        #090909;
+}
+
+/* Caixas de login e cadastro */
+
+#caixaLogin,
+#caixaCadastro {
+    width: 100%;
+    max-width: 390px;
+
+    padding: 38px 32px;
+
+    background: #151515;
+
+    border: 1px solid #29243f;
+    border-radius: 16px;
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.55),
+        0 0 25px rgba(83, 92, 194, 0.08);
+
+    text-align: center;
+
+    transition: border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+#caixaLogin:hover,
+#caixaCadastro:hover {
+    border-color: rgba(112, 103, 220, 0.55);
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.55),
+        0 0 25px rgba(83, 92, 194, 0.13);
+}
+
+/* Títulos */
+
+#caixaLogin h1,
+#caixaCadastro h1 {
+    color: #ffffff;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    margin: 0 0 12px;
+}
+
+/* Texto de apoio */
+
+#caixaLogin p,
+#caixaCadastro p {
+    color: #aaa8b8;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    margin-top: 18px;
+}
+
+/* Campos de preenchimento */
+
+#caixaLogin input,
+#caixaCadastro input {
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    padding: 14px 15px;
+    margin-bottom: 16px;
+
+    background: #0d0d12;
+
+    border: 1px solid #343044;
+    border-radius: 8px;
+
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+
+    outline: none;
+
+    transition: border-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+/* Texto dentro dos campos */
+
+#caixaLogin input::placeholder,
+#caixaCadastro input::placeholder {
+    color: #858292;
+}
+
+/* Destaque ao selecionar um campo */
+
+#caixaLogin input:focus,
+#caixaCadastro input:focus {
+    border-color: #7772e8;
+
+    box-shadow: 0 0 0 3px rgba(83, 92, 194, 0.18);
+}
+
+/* Botões principais */
+
+#caixaLogin button,
+#caixaCadastro button {
+    width: 100%;
+
+    padding: 14px;
+    margin-top: 8px;
+
+    background: linear-gradient(
+        135deg,
+        #535cc2,
+        #704bc4
+    );
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: background 0.25s ease,
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+#caixaLogin button:hover,
+#caixaCadastro button:hover {
+    background: linear-gradient(
+        135deg,
+        #646ee0,
+        #825de0
+    );
+
+    box-shadow: 0 5px 18px rgba(83, 92, 194, 0.25);
+
+    transform: translateY(-2px);
+}
+
+/* Links para alternar entre login e cadastro */
+
+#caixaLogin a,
+#caixaCadastro a {
+    color: #9994ff;
+
+    font-weight: bold;
+    text-decoration: none;
+
+    transition: color 0.2s ease;
+}
+
+#caixaLogin a:hover,
+#caixaCadastro a:hover {
+    color: #b9b5ff;
+    text-decoration: underline;
+}
+
+/* Mensagens de erro ou sucesso */
+
+#mensagemLogin,
+#mensagemCadastro {
+    margin-top: 14px;
+    font-size: 14px;
+}
+
+/* Ajuste para celulares */
+
+@media (max-width: 480px) {
+    #login {
+        padding: 22px 15px;
+    }
+
+    #caixaLogin,
+    #caixaCadastro {
+        max-width: 100%;
+        padding: 30px 22px;
+        border-radius: 12px;
+    }
+
+    #caixaLogin h1,
+    #caixaCadastro h1 {
+        font-size: 25px;
+    }
+}

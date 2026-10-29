@@ -297,50 +297,71 @@ const sugestoesPesquisa =
 let filmes = [];
 
 
-// =====================================================
-// BUSCAR FILMES DA SUA API
-// =====================================================
+        // =====================================================
+        // BUSCAR FILMES E PRIORIZAR OS MAIS AVALIADOS
+        // =====================================================
 
-fetch("http://localhost:3000/filmes")
+        async function carregarFilmesDestaque() {
 
-    .then(function (resposta) {
+            try {
 
-        if (!resposta.ok) {
+                const [respostaFilmes, respostaContagem] =
+                    await Promise.all([
+                        fetch("http://localhost:3000/filmes"),
+                        fetch("http://localhost:3000/avaliacoes/contagem-filmes")
+                    ]);
 
-            throw new Error(
-                `Erro HTTP: ${resposta.status}`
-            );
+                if (!respostaFilmes.ok) {
+                    throw new Error("Erro ao carregar filmes.");
+                }
 
+                const dadosFilmes = await respostaFilmes.json();
+
+                let contagens = [];
+
+                if (respostaContagem.ok) {
+                    contagens = await respostaContagem.json();
+                }
+
+                // Mapa com a quantidade de avaliações por filme
+                const mapaContagens = new Map(
+                    contagens.map(item => [
+                        String(item.filme_id),
+                        Number(item.total_avaliacoes) || 0
+                    ])
+                );
+
+                filmes = dadosFilmes.map(filme => ({
+                    ...filme,
+                    totalAvaliacoes:
+                        mapaContagens.get(String(filme.id)) || 0
+                }));
+
+                // Mais avaliações primeiro.
+                // Em caso de empate, mantém a ordem original da API.
+                filmes.sort(
+                    (a, b) =>
+                        b.totalAvaliacoes - a.totalAvaliacoes
+                );
+
+                console.log("Filmes em destaque:", filmes);
+
+                criarCards(filmes);
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar filmes em destaque:",
+                    erro
+                );
+
+                carrossel.innerHTML =
+                    "<p>Não foi possível carregar os filmes.</p>";
+
+            }
         }
 
-        return resposta.json();
-
-    })
-
-    .then(function (dados) {
-
-        filmes = dados;
-
-        console.log(
-            "Filmes recebidos:",
-            filmes
-        );
-
-
-        // CRIA OS CARDS
-
-        criarCards(filmes);
-
-    })
-
-    .catch(function (erro) {
-
-        console.error(
-            "Erro ao buscar filmes:",
-            erro
-        );
-
-    });
+        carregarFilmesDestaque();
 
 
 // =====================================================
@@ -403,15 +424,12 @@ function criarCards(filmes) {
                 }
             </p>
 
-            <span class="preco">
-
-                ⭐ ${
-                    filme.vote_average
-                    ? Number(filme.vote_average).toFixed(1)
-                    : "N/A"
-                }/10
-
-            </span>
+                <span class="preco nota-usuarios">
+            ⭐ <span class="media-usuario">--</span>/5
+            <small class="total-avaliacoes">
+                (${filme.totalAvaliacoes || 0} avaliações)
+            </small>
+        </span>
 
             <button class="btn-favoritar">
 
