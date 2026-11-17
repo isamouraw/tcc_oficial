@@ -3567,3 +3567,165 @@ footer {
         font-size: 25px;
     }
 }
+
+
+/* FOTO DO AUTOR NOS COMENTÁRIOS */
+.autor-avaliacao {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.foto-autor-avaliacao {
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.nome-autor-avaliacao {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.comentario-foto {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.comentario-usuario {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comentario-foto {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* ==========================================
+   NOVA ESTÉTICA CINE TRACK
+========================================== */
+
+#carrossel-cards .card {
+    background: #191522;
+    border: 1px solid #292337;
+    border-radius: 16px;
+    transition: border-color 0.3s, background 0.3s;
+}
+
+#carrossel-cards .card:hover {
+    background: #211B30;
+    border-color: #7055A5;
+}
+
+/* TÍTULOS */
+#carrossel-cards .card h3 {
+    color: #FFFFFF;
+}
+
+/* DESCRIÇÕES */
+#carrossel-cards .card p {
+    color: #D0CADB;
+}
+
+/* NOTAS */
+#carrossel-cards .card .preco {
+    color: #E8B83F;
+}
+
+/* BOTÕES */
+#carrossel-cards .card button {
+    border: none;
+    border-radius: 8px;
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.25s;
+}
+
+/* FAVORITAR */
+#carrossel-cards .btn-favoritar {
+    background: #30283F;
+}
+
+#carrossel-cards .btn-favoritar:hover {
+    background: #46365F;
+}
+
+/* ADICIONAR À LISTA */
+#carrossel-cards .btn-lista {
+    background: #514078;
+}
+
+#carrossel-cards .btn-lista:hover {
+    background: #66518F;
+}
+
+/* AVALIAR */
+#carrossel-cards .btn-comprar {
+    background: #7055A5;
+}
+
+#carrossel-cards .btn-comprar:hover {
+    background: #896CC2;
+    transform: translateY(-2px);
+}
+
+/* BOTÕES DESABILITADOS */
+#carrossel-cards .card button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+
+/* ==========================================
+   SETAS LATERAIS DO CARROSSEL
+========================================== */
+
+#btn-prev,
+#btn-next {
+    background: #30283F;
+    color: #FFFFFF;
+    border: 1px solid #514078;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+/* EFEITO AO PASSAR O MOUSE */
+#btn-prev:hover,
+#btn-next:hover {
+    background: #7958B8;
+    border-color: #9575CD;
+    box-shadow: 0 0 15px rgba(121, 88, 184, 0.35);
+    transform: scale(1.08);
+}
+
+/* CLIQUE */
+#btn-prev:active,
+#btn-next:active {
+    transform: scale(0.95);
+}

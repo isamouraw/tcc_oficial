@@ -10,6 +10,11 @@ router.post(
     UsuarioController.cadastrar
 );
 
+router.post(
+    "/verificar-email",
+    UsuarioController.verificarEmail
+);
+
 
 router.post(
     "/login",

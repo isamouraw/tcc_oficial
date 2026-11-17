@@ -1,42 +1,133 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login e Cadastro</title>
+    <title>CineTrack - Login e Cadastro</title>
+
     <link rel="stylesheet" href="style.css">
+
     <style>
-        #caixaCadastro{
+        #caixaCadastro,
+        #caixaVerificacao {
             display: none;
         }
     </style>
 </head>
+
 <body id="login">
-    <!-- CAIXA DE LOGIN -->
+
+    <!-- LOGIN -->
     <div id="caixaLogin">
+
         <h1>Login</h1>
+
         <form id="formLogin">
-        <input type="email" id="emailLogin" placeholder="Email" required>
-        <input type="password" id="senhaLogin" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
+
+            <input
+                type="email"
+                id="emailLogin"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                id="senhaLogin"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">Entrar</button>
+
         </form>
+
         <p id="mensagemLogin"></p>
-        <!-- Botão para ir para o cadastro -->
-        <p>Não tem uma conta? <a href="#" id="linkIrCadastro">Cadastre-se aqui</a></p>
+
+        <p>
+            Não tem uma conta?
+            <a href="#" id="linkIrCadastro">Cadastre-se aqui</a>
+        </p>
+
     </div>
 
+
+    <!-- CADASTRO -->
     <div id="caixaCadastro">
+
         <h1>Cadastrar novo usuário</h1>
+
         <form id="formCadastro">
-            <input type="text" id="nomeCadastro" placeholder="Nome" required>
-            <input type="email" id="emailCadastro" placeholder="Email" required>
-            <input type="password" id="senhaCadastro" placeholder="Senha" required>
+
+            <input
+                type="text"
+                id="nomeCadastro"
+                placeholder="Nome"
+                required
+            >
+
+            <input
+                type="email"
+                id="emailCadastro"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="password"
+                id="senhaCadastro"
+                placeholder="Senha"
+                required
+            >
+
             <button type="submit">Cadastrar</button>
+
         </form>
+
         <p id="mensagemCadastro"></p>
 
-        <a href="#" id="linkIrLogin">Clique aqui para fazer login</a>
+        <a href="#" id="linkIrLogin">
+            Clique aqui para fazer login
+        </a>
+
     </div>
+
+
+    <!-- CONFIRMAÇÃO DE E-MAIL -->
+    <div id="caixaVerificacao">
+
+        <h1>Confirme seu e-mail</h1>
+
+        <p>
+            Enviamos um código de confirmação para seu endereço de e-mail.
+        </p>
+
+        <form id="formVerificacao">
+
+            <input
+                type="text"
+                id="codigoVerificacao"
+                placeholder="Digite o código de 6 dígitos"
+                maxlength="6"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                required
+            >
+
+            <button type="submit">
+                Confirmar e-mail
+            </button>
+
+        </form>
+
+        <p id="mensagemVerificacao"></p>
+
+    </div>
+
+
     <script src="login.js"></script>
+
 </body>
 </html>

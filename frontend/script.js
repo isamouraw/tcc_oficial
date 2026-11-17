@@ -1,161 +1,96 @@
+
 const carrossel = document.getElementById("carrossel-cards");
 const btnPrev = document.getElementById("btn-prev");
 const btnNext = document.getElementById("btn-next");
+
+const campoPesquisa = document.getElementById("campoPesquisa");
+const sugestoesPesquisa = document.getElementById("sugestoesPesquisa");
+
+let filmes = [];
 
 
 // ==========================================
 // CARROSSEL
 // ==========================================
 
-btnNext.addEventListener("click", function () {
-
-    carrossel.scrollBy({
-        left: 460,
-        behavior: "smooth"
+if (btnNext && carrossel) {
+    btnNext.addEventListener("click", function () {
+        carrossel.scrollBy({
+            left: 460,
+            behavior: "smooth"
+        });
     });
+}
 
-});
-
-btnPrev.addEventListener("click", function () {
-
-    carrossel.scrollBy({
-        left: -460,
-        behavior: "smooth"
+if (btnPrev && carrossel) {
+    btnPrev.addEventListener("click", function () {
+        carrossel.scrollBy({
+            left: -460,
+            behavior: "smooth"
+        });
     });
-
-});
-
-
-// ==========================================
-// PESQUISA DE FILMES
-// ==========================================
-
-const campoPesquisa =
-    document.getElementById("campoPesquisa");
-
-const sugestoesPesquisa =
-    document.getElementById("sugestoesPesquisa");
-
-let filmes = [];
+}
 
 
 // ==========================================
-// BUSCAR FILMES PARA OS CARDS
+// BUSCAR FILMES
 // ==========================================
 
-fetch("http://localhost:3000/filmes")
-
-    .then(resposta => {
+async function carregarFilmes() {
+    try {
+        const resposta = await fetch("http://localhost:3000/filmes");
 
         if (!resposta.ok) {
-            throw new Error(`Erro HTTP: ${resposta.status}`);
+            throw new Error("Erro HTTP: " + resposta.status);
         }
 
-        return resposta.json();
+        filmes = await resposta.json();
 
-    })
+        console.log("FILMES RECEBIDOS:", filmes);
 
-    .then(dados => {
-
-        filmes = dados;
-
-        console.log(
-            "Filmes recebidos:",
-            filmes
-        );
-
-        // Criar os cards
         criarCards(filmes);
 
-    })
-
-    .catch(erro => {
-
-        console.error(
-            "Erro ao buscar filmes:",
-            erro
-        );
-
-    });
+    } catch (erro) {
+        console.error("Erro ao buscar filmes:", erro);
+    }
+}
 
 
 // ==========================================
-// BUSCAR FILMES PARA O BANNER
+// BANNER PRINCIPAL
 // ==========================================
 
-fetch("http://localhost:3000/filmes/banner")
-
-    .then(resposta => {
+async function carregarBanner() {
+    try {
+        const resposta = await fetch("http://localhost:3000/filmes/banner");
 
         if (!resposta.ok) {
-            throw new Error(`Erro HTTP: ${resposta.status}`);
+            throw new Error("Erro ao buscar banner.");
         }
 
-        return resposta.json();
+        const filmesBanner = await resposta.json();
 
-    })
+        console.log("FILMES DO BANNER:", filmesBanner);
 
-    .then(filmesBanner => {
+        const banner = document.getElementById("bannerPrincipal");
+        const btnExplorar = document.getElementById("btnExplorar");
+        const bannerDescricao = document.getElementById("bannerDescricao");
 
-        console.log(
-            "Filmes do banner:",
-            filmesBanner
-        );
-
-
-        const banner =
-            document.getElementById("bannerPrincipal");
-
-        const btnExplorar =
-            document.getElementById("btnExplorar");
-
-        const bannerDescricao =
-            document.getElementById("bannerDescricao");
-
-
-        if (!filmesBanner.length) {
-
-            console.log(
-                "Nenhum filme disponível para o banner."
-            );
-
+        if (!banner || !bannerDescricao || !btnExplorar || !filmesBanner.length) {
             return;
-
         }
-
-
-        // ======================================
-        // ÍNDICE DO BANNER
-        // ======================================
 
         let indiceBanner = 0;
 
-
-        // ======================================
-        // ATUALIZAR BANNER
-        // ======================================
-
         function atualizarBanner() {
+            const filme = filmesBanner[indiceBanner];
 
-            const filme =
-                filmesBanner[indiceBanner];
-
-
-            if (!filme) {
-                return;
-            }
-
-
-            // ==================================
-            // IMAGEM DE FUNDO
-            // ==================================
+            if (!filme) return;
 
             if (filme.backdrop_path) {
-
                 const imagemBanner =
                     "https://image.tmdb.org/t/p/original" +
                     filme.backdrop_path;
-
 
                 banner.style.backgroundImage = `
                     linear-gradient(
@@ -166,66 +101,33 @@ fetch("http://localhost:3000/filmes/banner")
                     ),
                     url("${imagemBanner}")
                 `;
-
             }
-
-
-            // ==================================
-            // DESCRIÇÃO
-            // ==================================
 
             bannerDescricao.textContent =
                 filme.overview ||
                 "Descubra filmes incríveis no CineTrack.";
+        }
 
+        btnExplorar.onclick = function () {
+            window.location.href = "Filmes.html";
+        };
 
-                        // ==================================
-                // BOTÃO EXPLORAR FILMES
-                // ==================================
-
-                btnExplorar.onclick = function () {
-
-                    window.location.href = "Filmes.html";
-
-                };
-
-                        }
-
-
-        // Mostra o primeiro filme
         atualizarBanner();
 
-
-        // ======================================
-        // TROCAR AUTOMATICAMENTE
-        // ======================================
-
         setInterval(function () {
-
             indiceBanner++;
 
-            if (
-                indiceBanner >= filmesBanner.length
-            ) {
-
+            if (indiceBanner >= filmesBanner.length) {
                 indiceBanner = 0;
-
             }
 
             atualizarBanner();
-
         }, 7000);
 
-    })
-
-    .catch(erro => {
-
-        console.error(
-            "Erro ao buscar filmes do banner:",
-            erro
-        );
-
-    });
+    } catch (erro) {
+        console.error("Erro ao carregar banner:", erro);
+    }
+}
 
 
 // ==========================================
@@ -233,510 +135,222 @@ fetch("http://localhost:3000/filmes/banner")
 // ==========================================
 
 function criarCards(listaFilmes) {
+    if (!carrossel) return;
 
     carrossel.innerHTML = "";
 
+    listaFilmes.slice(0, 10).forEach(function (filme) {
+        const card = document.createElement("div");
+        card.classList.add("card");
 
-    listaFilmes
-        .slice(0, 10)
-        .forEach(function (filme) {
+        const poster = filme.poster_path
+            ? "https://image.tmdb.org/t/p/w500" + filme.poster_path
+            : "./assets/sem-poster.jpg";
 
-            const card =
-                document.createElement("div");
+        card.innerHTML = `
+            <img
+                class="card-img"
+                src="${poster}"
+                alt="${filme.title}"
+            >
 
-            card.classList.add("card");
+            <h3>${filme.title}</h3>
 
+            <p>
+                ${filme.overview || "Descrição não disponível."}
+            </p>
 
-            // ======================================
-            // POSTER
-            // ======================================
+            <span class="preco">
+                ⭐ ${
+                    filme.vote_average
+                        ? Number(filme.vote_average).toFixed(1)
+                        : "N/A"
+                }/10
+            </span>
 
-            let poster;
+            <button class="btn-favoritar" type="button">
+                ♡ Favoritar
+            </button>
 
-            if (filme.poster_path) {
+            <button class="btn-comprar" type="button">
+                Avaliar
+            </button>
+        `;
 
-                poster =
-                    "https://image.tmdb.org/t/p/w500" +
-                    filme.poster_path;
+       card.addEventListener("click", function (event) {
+        if (event.target.closest("button")) {
+          return;
+      }
+        window.location.href = "avaliacao.html?id=" + filme.id;
+    });
 
-            } else {
+        const btnFavoritar = card.querySelector(".btn-favoritar");
+        const btnAvaliar = card.querySelector(".btn-comprar");
 
-                poster =
-                    "./assets/sem-poster.jpg";
-
-            }
-
-
-            // ======================================
-            // CONTEÚDO DO CARD
-            // ======================================
-
-            card.innerHTML = `
-
-                <img
-                    class="card-img"
-                    src="${poster}"
-                    alt="${filme.title}"
-                >
-
-                <h3>
-                    ${filme.title}
-                </h3>
-
-                <p>
-                    ${
-                        filme.overview ||
-                        "Descrição não disponível."
-                    }
-                </p>
-
-                <span class="preco">
-                    ⭐ ${
-                        filme.vote_average
-                            ? Number(filme.vote_average).toFixed(1)
-                            : "N/A"
-                    }/10
-                </span>
-
-                <button
-                    class="btn-favoritar"
-                    type="button"
-                >
-                    ♡ Favoritar
-                </button>
-
-                <button
-                    class="btn-comprar"
-                    type="button"
-                >
-                    Avaliar
-                </button>
-
-            `;
-
-
-            // ======================================
-            // CLIQUE NO CARD
-            // ======================================
-
-            card.addEventListener(
-                "click",
-                function () {
-
-                    window.location.href =
-                        "filme.html?id=" + filme.id;
-
-                }
+        // VERIFICAR FAVORITO
+        async function verificarFavorito() {
+            const usuario = JSON.parse(
+                localStorage.getItem("usuario")
             );
 
+            if (!usuario) return;
 
-            // ======================================
-            // BOTÕES
-            // ======================================
-
-            const btnFavoritar =
-                card.querySelector(".btn-favoritar");
-
-            const btnAvaliar =
-                card.querySelector(".btn-comprar");
-
-
-            // ======================================
-            // VERIFICAR SE JÁ É FAVORITO
-            // ======================================
-
-            async function verificarFavorito() {
-
-                const usuario = JSON.parse(
-                    localStorage.getItem("usuario")
+            try {
+                const resposta = await fetch(
+                    `http://localhost:3000/favoritos/${usuario.id}/${filme.id}`
                 );
 
-                if (!usuario) {
-                    return;
-                }
+                if (!resposta.ok) return;
 
-                try {
+                const dados = await resposta.json();
 
-                    const resposta = await fetch(
-                        `http://localhost:3000/favoritos/${usuario.id}/${filme.id}`
-                    );
+                btnFavoritar.textContent = dados.favorito
+                    ? "♥ Favoritado"
+                    : "♡ Favoritar";
 
-                    if (!resposta.ok) {
-                        return;
-                    }
+            } catch (erro) {
+                console.error("Erro ao verificar favorito:", erro);
+            }
+        }
 
-                    const dados =
-                        await resposta.json();
+        verificarFavorito();
 
-                    if (dados.favorito) {
+        // FAVORITAR / DESFAVORITAR
+        btnFavoritar.addEventListener("click", async function (event) {
+            event.preventDefault();
+            event.stopPropagation();
 
-                        btnFavoritar.textContent =
-                            "♥ Favoritado";
+            const usuario = JSON.parse(
+                localStorage.getItem("usuario")
+            );
 
-                    } else {
-
-                        btnFavoritar.textContent =
-                            "♡ Favoritar";
-
-                    }
-
-                } catch (erro) {
-
-                    console.error(
-                        "Erro ao verificar favorito:",
-                        erro
-                    );
-
-                }
-
+            if (!usuario) {
+                alert("Você precisa estar logado para favoritar um filme.");
+                window.location.href = "login.html";
+                return;
             }
 
+            const estaFavoritado =
+                btnFavoritar.textContent.includes("Favoritado");
 
-            verificarFavorito();
+            try {
+                btnFavoritar.disabled = true;
 
-
-            // ======================================
-            // FAVORITAR / DESFAVORITAR
-            // ======================================
-
-            btnFavoritar.addEventListener(
-                "click",
-                async function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-
-                    const usuario = JSON.parse(
-                        localStorage.getItem("usuario")
-                    );
-
-
-                    if (!usuario) {
-
-                        alert(
-                            "Você precisa estar logado para favoritar um filme."
-                        );
-
-                        return;
-
+                const resposta = await fetch(
+                    "http://localhost:3000/favoritos",
+                    {
+                        method: estaFavoritado ? "DELETE" : "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            usuario_id: usuario.id,
+                            filme_id: filme.id
+                        })
                     }
+                );
 
+                const dados = await resposta.json();
 
-                    const estaFavoritado =
-                        btnFavoritar.textContent.includes(
-                            "Favoritado"
-                        );
-
-
-                    try {
-
-                        btnFavoritar.disabled = true;
-
-                        let resposta;
-
-
-                        // DESFAVORITAR
-
-                        if (estaFavoritado) {
-
-                            resposta = await fetch(
-                                "http://localhost:3000/favoritos",
-                                {
-                                    method: "DELETE",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body: JSON.stringify({
-                                        usuario_id:
-                                            usuario.id,
-
-                                        filme_id:
-                                            filme.id
-                                    })
-                                }
-                            );
-
-                        }
-
-
-                        // FAVORITAR
-
-                        else {
-
-                            resposta = await fetch(
-                                "http://localhost:3000/favoritos",
-                                {
-                                    method: "POST",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body: JSON.stringify({
-                                        usuario_id:
-                                            usuario.id,
-
-                                        filme_id:
-                                            filme.id
-                                    })
-                                }
-                            );
-
-                        }
-
-
-                        const dados =
-                            await resposta.json();
-
-
-                        console.log(
-                            "RESPOSTA FAVORITO:",
-                            dados
-                        );
-
-
-                        if (!resposta.ok) {
-
-                            throw new Error(
-                                dados.erro ||
-                                "Erro ao alterar favorito"
-                            );
-
-                        }
-
-
-                        // ATUALIZAR BOTÃO
-
-                        if (estaFavoritado) {
-
-                            btnFavoritar.textContent =
-                                "♡ Favoritar";
-
-                        } else {
-
-                            btnFavoritar.textContent =
-                                "♥ Favoritado";
-
-                        }
-
-                    } catch (erro) {
-
-                        console.error(
-                            "Erro ao alterar favorito:",
-                            erro
-                        );
-
-                        alert(
-                            "Não foi possível alterar o favorito."
-                        );
-
-                    } finally {
-
-                        btnFavoritar.disabled = false;
-
-                    }
-
+                if (!resposta.ok) {
+                    throw new Error(dados.erro || "Erro ao alterar favorito.");
                 }
-            );
 
+                btnFavoritar.textContent = estaFavoritado
+                    ? "♡ Favoritar"
+                    : "♥ Favoritado";
 
-            // ======================================
-            // BOTÃO AVALIAR
-            // ======================================
+            } catch (erro) {
+                console.error("Erro ao alterar favorito:", erro);
+                alert("Não foi possível alterar o favorito.");
 
-            btnAvaliar.addEventListener(
-                "click",
-                function (event) {
-
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    window.location.href =
-                        "filme.html?id=" +
-                        filme.id;
-
-                }
-            );
-
-
-            carrossel.appendChild(card);
-
+            } finally {
+                btnFavoritar.disabled = false;
+            }
         });
 
+        // AVALIAR
+        btnAvaliar.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            window.location.href = "avaliacao.html?id=" + filme.id;
+        });
+
+        carrossel.appendChild(card);
+    });
 }
 
 
 // ==========================================
-// PESQUISA
+// PESQUISA DE FILMES
 // ==========================================
 
-campoPesquisa.addEventListener(
-    "input",
-    function () {
-
-        const texto =
-            campoPesquisa.value
-                .trim()
-                .toLowerCase();
-
+if (campoPesquisa && sugestoesPesquisa) {
+    campoPesquisa.addEventListener("input", function () {
+        const texto = campoPesquisa.value.trim().toLowerCase();
 
         sugestoesPesquisa.innerHTML = "";
 
-
         if (texto === "") {
-
-            sugestoesPesquisa.style.display =
-                "none";
-
+            sugestoesPesquisa.style.display = "none";
             return;
-
         }
 
+        const resultados = filmes.filter(function (filme) {
+            return filme.title.toLowerCase().includes(texto);
+        });
 
-        // ======================================
-        // FILTRAR FILMES
-        // ======================================
+        console.log("RESULTADOS ENCONTRADOS:", resultados);
 
-        const resultados =
-            filmes.filter(function (filme) {
+        resultados.slice(0, 5).forEach(function (filme) {
+            const sugestao = document.createElement("div");
+            sugestao.classList.add("sugestao");
 
-                return filme.title
-                    .toLowerCase()
-                    .includes(texto);
+            if (filme.poster_path) {
+                const poster = document.createElement("img");
 
+                poster.classList.add("poster-pesquisa");
+                poster.src =
+                    "https://image.tmdb.org/t/p/w92" + filme.poster_path;
+                poster.alt = filme.title;
+
+                sugestao.appendChild(poster);
+            }
+
+            const titulo = document.createElement("span");
+            titulo.textContent = filme.title;
+
+            sugestao.appendChild(titulo);
+
+            sugestao.addEventListener("click", function () {
+                campoPesquisa.value = filme.title;
+                sugestoesPesquisa.innerHTML = "";
+                sugestoesPesquisa.style.display = "none";
+
+                window.location.href = "avaliacao.html?id=" + filme.id;
             });
 
+            sugestoesPesquisa.appendChild(sugestao);
+        });
 
-        console.log(
-            "Resultados encontrados:",
-            resultados
-        );
+        sugestoesPesquisa.style.display =
+            resultados.length > 0 ? "block" : "none";
+    });
+}
 
-
-        // ======================================
-        // CRIAR SUGESTÕES
-        // ======================================
-
-        resultados
-            .slice(0, 5)
-            .forEach(function (filme) {
-
-                const sugestao =
-                    document.createElement("div");
-
-                sugestao.classList.add(
-                    "sugestao"
-                );
-
-
-                // POSTER
-
-                if (filme.poster_path) {
-
-                    const poster =
-                        document.createElement("img");
-
-                    poster.classList.add(
-                        "poster-pesquisa"
-                    );
-
-                    poster.src =
-                        "https://image.tmdb.org/t/p/w92" +
-                        filme.poster_path;
-
-                    poster.alt =
-                        filme.title;
-
-                    sugestao.appendChild(
-                        poster
-                    );
-
-                }
-
-
-                // TÍTULO
-
-                const titulo =
-                    document.createElement("span");
-
-                titulo.textContent =
-                    filme.title;
-
-                sugestao.appendChild(
-                    titulo
-                );
-
-
-                // CLIQUE
-
-                sugestao.addEventListener(
-                    "click",
-                    function () {
-
-                        campoPesquisa.value =
-                            filme.title;
-
-                        sugestoesPesquisa.innerHTML =
-                            "";
-
-                        sugestoesPesquisa.style.display =
-                            "none";
-
-
-                        window.location.href =
-                            "filme.html?id=" +
-                            filme.id;
-
-                    }
-                );
-
-
-                sugestoesPesquisa.appendChild(
-                    sugestao
-                );
-
-            });
-
-
-        // ======================================
-        // MOSTRAR / ESCONDER
-        // ======================================
-
-        if (resultados.length > 0) {
-
-            sugestoesPesquisa.style.display =
-                "block";
-
-        } else {
-
-            sugestoesPesquisa.style.display =
-                "none";
-
-        }
-
-    }
-);
 
 // ==========================================
 // COMENTÁRIOS MAIS CURTIDOS
 // ==========================================
 
+
 async function carregarComentariosMaisCurtidos() {
+    const lista = document.getElementById("listaComentariosCurtidos");
 
-    const lista =
-        document.getElementById("listaComentariosCurtidos");
-
-    if (!lista) {
-        return;
-    }
+    if (!lista) return;
 
     try {
-
         const resposta = await fetch(
             "http://localhost:3000/avaliacoes/mais-curtidas"
         );
@@ -745,107 +359,119 @@ async function carregarComentariosMaisCurtidos() {
             throw new Error("Erro ao buscar comentários.");
         }
 
-        const avaliacoes =
-            await resposta.json();
+        const avaliacoes = await resposta.json();
 
-        console.log(
-            "COMENTÁRIOS MAIS CURTIDOS:",
-            avaliacoes
-        );
+        console.log("COMENTÁRIOS RECEBIDOS NA HOME:", avaliacoes);
 
         lista.innerHTML = "";
 
-        if (avaliacoes.length === 0) {
-
-            lista.innerHTML =
-                `<p class="sem-comentarios">
+        if (!Array.isArray(avaliacoes) || avaliacoes.length === 0) {
+            lista.innerHTML = `
+                <p class="sem-comentarios">
                     Ainda não existem comentários.
-                </p>`;
-
+                </p>
+            `;
             return;
         }
 
-
         avaliacoes.forEach(function (avaliacao) {
+            const card = document.createElement("div");
+            card.classList.add("comentario-card");
 
-            const card =
-                document.createElement("div");
-
-            card.classList.add(
-                "comentario-card"
-            );
-
-
-            const nome =
-                avaliacao.nome || "Usuário";
-
+            const nome = avaliacao.nome || "Usuário";
+            const foto = typeof avaliacao.foto_perfil === "string"
+                ? avaliacao.foto_perfil.trim()
+                : "";
 
             const quantidadeCurtidas =
                 Number(avaliacao.curtidas) || 0;
 
+            const estrelas = "⭐".repeat(
+                Math.round(Number(avaliacao.nota) || 0)
+            );
 
-            const estrelas =
-                "⭐".repeat(
-                    Math.round(Number(avaliacao.nota))
-                );
+            // USUÁRIO E FOTO
+            const usuarioDiv = document.createElement("div");
+            usuarioDiv.className = "comentario-usuario";
 
+            if (foto.startsWith("data:image/")) {
+                const imagem = document.createElement("img");
 
-            card.innerHTML = `
+                imagem.className = "comentario-foto";
+                imagem.src = foto;
+                imagem.alt = "Foto de " + nome;
 
-                <div class="comentario-usuario">
+                // Tamanho aplicado diretamente para não depender do CSS
+                imagem.style.width = "40px";
+                imagem.style.height = "40px";
+                imagem.style.minWidth = "40px";
+                imagem.style.borderRadius = "50%";
+                imagem.style.objectFit = "cover";
+                imagem.style.display = "block";
+                imagem.style.flexShrink = "0";
 
-                    <div class="comentario-foto">
-                        👤
-                    </div>
+                imagem.onerror = function () {
+                    console.error("ERRO AO CARREGAR FOTO DE:", nome);
+                };
 
-                    <strong>
-                        ${nome}
-                    </strong>
+                usuarioDiv.appendChild(imagem);
+            } else {
+                console.warn("Foto não encontrada para:", nome);
+            }
 
-                </div>
+            const nomeElemento = document.createElement("strong");
+            nomeElemento.className = "comentario-nome";
+            nomeElemento.textContent = nome;
 
+            usuarioDiv.appendChild(nomeElemento);
 
-                <div class="comentario-estrelas">
-                    ${estrelas}
-                </div>
+            // ESTRELAS
+            const avaliacaoEstrelas = document.createElement("div");
+            avaliacaoEstrelas.className = "comentario-estrelas";
+            avaliacaoEstrelas.textContent = estrelas;
 
+            // COMENTÁRIO
+            const textoComentario = document.createElement("p");
+            textoComentario.className = "comentario-texto";
+            textoComentario.textContent = avaliacao.comentario
+                ? `"${avaliacao.comentario}"`
+                : "";
 
-                <p class="comentario-texto">
-                    "${avaliacao.comentario}"
-                </p>
+            // CURTIDAS
+            const curtidas = document.createElement("div");
+            curtidas.className = "comentario-curtidas";
+            curtidas.textContent =
+                `♥ ${quantidadeCurtidas} ${
+                    quantidadeCurtidas === 1 ? "curtida" : "curtidas"
+                }`;
 
-
-                <div class="comentario-curtidas">
-                    ♥ ${quantidadeCurtidas}
-                    ${
-                        quantidadeCurtidas === 1
-                            ? "curtida"
-                            : "curtidas"
-                    }
-                </div>
-
-            `;
-
+            // MONTAR CARD
+            card.appendChild(usuarioDiv);
+            card.appendChild(avaliacaoEstrelas);
+            card.appendChild(textoComentario);
+            card.appendChild(curtidas);
 
             lista.appendChild(card);
-
         });
 
     } catch (erro) {
+        console.error("Erro ao carregar comentários:", erro);
 
-        console.error(
-            "Erro ao carregar comentários mais curtidos:",
-            erro
-        );
-
-        lista.innerHTML =
-            `<p class="sem-comentarios">
+        lista.innerHTML = `
+            <p class="sem-comentarios">
                 Não foi possível carregar os comentários.
-            </p>`;
-
+            </p>
+        `;
     }
-
 }
 
 
+// ==========================================
+// INICIAR HOME
+// ==========================================
+
+carregarFilmes();
+carregarBanner();
 carregarComentariosMaisCurtidos();
+
+console.log("HOME.JS FOI CARREGADO!");

@@ -299,105 +299,102 @@ document
 // CARREGAR AVALIAÇÕES DO FILME
 // =====================================================
 
+
 async function carregarAvaliacoes(idFilme) {
 
     try {
 
-        const resposta =
-            await fetch(
-                "http://localhost:3000/avaliacoes/" + idFilme
-            );
-
+        const resposta = await fetch(
+            "http://localhost:3000/avaliacoes/" + idFilme
+        );
 
         if (!resposta.ok) {
-
-            throw new Error(
-                "Erro ao buscar avaliações."
-            );
-
+            throw new Error("Erro ao buscar avaliações.");
         }
 
+        const avaliacoes = await resposta.json();
 
-        const avaliacoes =
-            await resposta.json();
+        console.log("FOTOS RECEBIDAS:", avaliacoes.map(a => a.foto_perfil));
 
-
-        const lista =
-            document.getElementById("listaAvaliacoes");
-
+        const lista = document.getElementById("listaAvaliacoes");
 
         if (!lista) {
-
-            console.error(
-                "Elemento listaAvaliacoes não encontrado."
-            );
-
+            console.error("Elemento listaAvaliacoes não encontrado.");
             return;
-
         }
-
 
         lista.innerHTML = "";
 
-
         if (avaliacoes.length === 0) {
 
-            lista.innerHTML =
-                '<p class="sem-avaliacoes">Ainda não existem avaliações para este filme. Seja o primeiro a avaliar!</p>';
+            lista.innerHTML = `
+                <p class="sem-avaliacoes">
+                    Ainda não existem avaliações para este filme.
+                    Seja o primeiro a avaliar!
+                </p>
+            `;
 
             return;
-
         }
 
-
-        const usuarioAtual =
-            JSON.parse(localStorage.getItem("usuario"));
-
+        const usuarioAtual = JSON.parse(
+            localStorage.getItem("usuario")
+        );
 
         for (const avaliacao of avaliacoes) {
 
-            const item =
-                document.createElement("div");
-
+            const item = document.createElement("div");
             item.classList.add("avaliacao-item");
 
+            const estrelas = "⭐".repeat(Number(avaliacao.nota));
 
-            const estrelas =
-                "⭐".repeat(Number(avaliacao.nota));
+            // FOTO DO AUTOR
+            const fotoAutor = avaliacao.foto_perfil ||
+                "./assets/perfil-padrao.png";
 
+            // NOME DO AUTOR
+            const nomeAutor = avaliacao.nome || "Usuário";
+
+            // VERIFICAR SE A AVALIAÇÃO É DO USUÁRIO LOGADO
+            const podeExcluir =
+                usuarioAtual &&
+                Number(avaliacao.usuario_id) === Number(usuarioAtual.id);
 
             let curtidas = 0;
-
             let usuarioCurtiu = false;
 
-if (usuarioAtual) {
-    try {
-        const respostaCurtida = await fetch(
-            "http://localhost:3000/avaliacoes/curtida/" +
-            usuarioAtual.id +
-            "/" +
-            avaliacao.id
-        );
+            // VERIFICAR CURTIDA
+            if (usuarioAtual) {
 
-        if (respostaCurtida.ok) {
-            const dadosCurtida = await respostaCurtida.json();
-            usuarioCurtiu = dadosCurtida.curtiu;
-        }
+                try {
 
-    } catch (erro) {
-        console.error("Erro ao verificar curtida:", erro);
-    }
-}
-
-
-            try {
-
-                const respostaCurtidas =
-                    await fetch(
-                        "http://localhost:3000/avaliacoes/curtidas/" +
-                        avaliacao.id
+                    const respostaCurtida = await fetch(
+                        "http://localhost:3000/avaliacoes/curtida/" +
+                        usuarioAtual.id + "/" + avaliacao.id
                     );
 
+                    if (respostaCurtida.ok) {
+
+                        const dadosCurtida =
+                            await respostaCurtida.json();
+
+                        usuarioCurtiu = dadosCurtida.curtiu;
+
+                    }
+
+                } catch (erro) {
+                    console.error("Erro ao verificar curtida:", erro);
+                }
+
+            }
+
+            // CONTAR CURTIDAS
+            try {
+
+                const respostaCurtidas = await fetch(
+                    "http://localhost:3000/avaliacoes/curtidas/" +
+                    avaliacao.id
+                );
 
                 if (respostaCurtidas.ok) {
 
@@ -410,165 +407,209 @@ if (usuarioAtual) {
                 }
 
             } catch (erro) {
-
-                console.error(
-                    "Erro ao buscar curtidas:",
-                    erro
-                );
-
+                console.error("Erro ao buscar curtidas:", erro);
             }
 
+            // MONTAR A AVALIAÇÃO
+            item.innerHTML = `
 
-            item.innerHTML =
-                '<div class="avaliacao-nota">' +
-                    estrelas +
-                '</div>' +
+                <div class="autor-avaliacao">
 
-                '<p class="avaliacao-comentario">' +
-                    '"' + avaliacao.comentario + '"' +
-                '</p>' +
+                    <img
+                        class="foto-autor-avaliacao"
+                        src="${fotoAutor}"
+                        alt="Foto de ${nomeAutor}"
+                    >
 
-                '<small>' +
-                    (
+                    <strong class="nome-autor-avaliacao">
+                        ${nomeAutor}
+                    </strong>
+
+                </div>
+
+                <div class="avaliacao-nota">
+                    ${estrelas}
+                </div>
+
+                <p class="avaliacao-comentario">
+                    "${avaliacao.comentario || ""}"
+                </p>
+
+                <small>
+                    ${
                         avaliacao.data_avaliacao
                             ? new Date(
                                 avaliacao.data_avaliacao
                               ).toLocaleString("pt-BR")
                             : ""
-                    ) +
-                '</small>' +
-
-                '<div class="curtida-avaliacao">' +
-
-                    '<button ' +
-    'type="button" ' +
-    'class="btn-curtir-avaliacao">' +
-    '♡' +
-'</button>' +
-
-                    '<span class="quantidade-curtidas">' +
-                        curtidas +
-                    '</span>' +
-
-                '</div>';
-
-
-            const botaoCurtir =
-                item.querySelector(
-                    ".btn-curtir-avaliacao"
-                );
-
-
-            const quantidadeCurtidas =
-                item.querySelector(
-                    ".quantidade-curtidas"
-                );
-
-
-                botaoCurtir.addEventListener(
-                    "click",
-                    async function () {
-                
-                        if (!usuarioAtual) {
-                            alert("Faça login para curtir uma avaliação.");
-                            return;
-                        }
-                
-                        try {
-                
-                            // TENTA CURTIR
-                            const respostaCurtir = await fetch(
-                                "http://localhost:3000/avaliacoes/curtir",
-                                {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json"
-                                    },
-                                    body: JSON.stringify({
-                                        usuario_id: usuarioAtual.id,
-                                        avaliacao_id: avaliacao.id
-                                    })
-                                }
-                            );
-                
-                            // SE CONSEGUIU CURTIR
-                            if (respostaCurtir.ok) {
-                
-                                curtidas++;
-                
-                                quantidadeCurtidas.textContent = curtidas;
-                
-                                botaoCurtir.textContent = "♥";
-                
-                                botaoCurtir.classList.add("curtido");
-                
-                                return;
-                            }
-                
-                
-                            // SE JÁ TINHA CURTIDO, DESCURTE
-                            const dados = await respostaCurtir.json();
-                
-                            if (
-                                dados.erro ===
-                                "Você já curtiu esta avaliação."
-                            ) {
-                
-                                const respostaDescurtir = await fetch(
-                                    "http://localhost:3000/avaliacoes/descurtir",
-                                    {
-                                        method: "DELETE",
-                                        headers: {
-                                            "Content-Type": "application/json"
-                                        },
-                                        body: JSON.stringify({
-                                            usuario_id: usuarioAtual.id,
-                                            avaliacao_id: avaliacao.id
-                                        })
-                                    }
-                                );
-                
-                                if (!respostaDescurtir.ok) {
-                                    throw new Error("Erro ao descurtir.");
-                                }
-                
-                                curtidas--;
-                
-                                quantidadeCurtidas.textContent = curtidas;
-                
-                                botaoCurtir.textContent = "♡";
-                
-                                botaoCurtir.classList.remove("curtido");
-                            }
-                
-                        } catch (erro) {
-                
-                            console.error(
-                                "Erro ao alterar curtida:",
-                                erro
-                            );
-                
-                            alert(
-                                "Não foi possível alterar a curtida."
-                            );
-                
-                        }
-                
                     }
-                );
+                </small>
 
+                <div class="curtida-avaliacao">
+
+                    <button
+                        type="button"
+                        class="btn-curtir-avaliacao ${usuarioCurtiu ? "curtido" : ""}"
+                    >
+                        ${usuarioCurtiu ? "♥" : "♡"}
+                    </button>
+
+                    <span class="quantidade-curtidas">
+                        ${curtidas}
+                    </span>
+
+                </div>
+
+                ${
+                    podeExcluir
+                        ? `
+                            <button
+                                type="button"
+                                class="btn-excluir-avaliacao"
+                            >
+                                Excluir avaliação
+                            </button>
+                        `
+                        : ""
+                }
+
+            `;
+
+            // BOTÃO CURTIR
+            const botaoCurtir = item.querySelector(
+                ".btn-curtir-avaliacao"
+            );
+
+            const quantidadeCurtidas = item.querySelector(
+                ".quantidade-curtidas"
+            );
+
+            botaoCurtir.addEventListener("click", async function () {
+
+                if (!usuarioAtual) {
+                    alert("Faça login para curtir uma avaliação.");
+                    return;
+                }
+
+                try {
+
+                    const url = usuarioCurtiu
+                        ? "http://localhost:3000/avaliacoes/descurtir"
+                        : "http://localhost:3000/avaliacoes/curtir";
+
+                    const respostaCurtida = await fetch(url, {
+
+                        method: usuarioCurtiu ? "DELETE" : "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            usuario_id: usuarioAtual.id,
+                            avaliacao_id: avaliacao.id
+                        })
+
+                    });
+
+                    if (!respostaCurtida.ok) {
+                        const dados = await respostaCurtida.json();
+                        throw new Error(dados.erro || "Erro ao alterar curtida.");
+                    }
+
+                    usuarioCurtiu = !usuarioCurtiu;
+
+                    curtidas += usuarioCurtiu ? 1 : -1;
+
+                    quantidadeCurtidas.textContent = curtidas;
+
+                    botaoCurtir.textContent =
+                        usuarioCurtiu ? "♥" : "♡";
+
+                    botaoCurtir.classList.toggle(
+                        "curtido",
+                        usuarioCurtiu
+                    );
+
+                } catch (erro) {
+
+                    console.error("Erro ao alterar curtida:", erro);
+
+                    alert("Não foi possível alterar a curtida.");
+
+                }
+
+            });
+
+            // BOTÃO EXCLUIR
+            const botaoExcluir = item.querySelector(
+                ".btn-excluir-avaliacao"
+            );
+
+            if (botaoExcluir) {
+
+                botaoExcluir.addEventListener("click", async function () {
+
+                    const confirmar = confirm(
+                        "Tem certeza que deseja excluir sua avaliação?"
+                    );
+
+                    if (!confirmar) return;
+
+                    try {
+
+                        botaoExcluir.disabled = true;
+                        botaoExcluir.textContent = "Excluindo...";
+
+                        const respostaExcluir = await fetch(
+                            "http://localhost:3000/avaliacoes/" +
+                            avaliacao.id,
+                            {
+                                method: "DELETE",
+
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    usuario_id: usuarioAtual.id
+                                })
+                            }
+                        );
+
+                        const dados = await respostaExcluir.json();
+
+                        if (!respostaExcluir.ok) {
+                            throw new Error(
+                                dados.erro || "Erro ao excluir avaliação."
+                            );
+                        }
+
+                        await carregarAvaliacoes(idFilme);
+                        await carregarMediaFilme(idFilme);
+
+                    } catch (erro) {
+
+                        console.error("Erro ao excluir avaliação:", erro);
+
+                        alert(erro.message);
+
+                        botaoExcluir.disabled = false;
+                        botaoExcluir.textContent = "Excluir avaliação";
+
+                    }
+
+                });
+
+            }
 
             lista.appendChild(item);
 
         }
 
-
     } catch (erro) {
 
-        console.error(
-            "Erro ao carregar avaliações:",
-            erro
-        );
+        console.error("Erro ao carregar avaliações:", erro);
 
     }
 

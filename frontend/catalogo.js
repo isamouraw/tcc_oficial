@@ -1,4 +1,20 @@
+
 let todosOsFilmes = [];
+
+
+// ==========================================
+// ABRIR FILME
+// ==========================================
+
+function abrirFilme(filmeId) {
+    window.location.href = "avaliacao.html?id=" + filmeId;
+}
+
+
+// ==========================================
+// CARREGAR FILMES
+// ==========================================
+
 async function carregarFilmes() {
     try {
         const resposta = await fetch("http://localhost:3000/filmes");
@@ -22,7 +38,7 @@ async function carregarFilmes() {
 
         const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-        filmes.forEach(async function (filme) {
+        for (const filme of filmes) {
 
             const card = document.createElement("div");
             card.classList.add("card");
@@ -40,7 +56,13 @@ async function carregarFilmes() {
 
                 <h2>${filme.title}</h2>
 
-                <p>⭐ ${Number(filme.vote_average).toFixed(1)}/10</p>
+                <p>
+                    ⭐ ${
+                        filme.vote_average
+                            ? Number(filme.vote_average).toFixed(1)
+                            : "N/A"
+                    }/10
+                </p>
 
                 <p>${filme.overview || "Descrição não disponível."}</p>
 
@@ -57,88 +79,71 @@ async function carregarFilmes() {
                 </button>
             `;
 
-            const botaoFavoritar =
-                card.querySelector(".btn-favoritar");
-
-            const botaoLista =
-                card.querySelector(".btn-lista");
-
-            const botaoAvaliar =
-                card.querySelector(".btn-avaliar");
-
-                card.onclick = function () {
-                    const usuario = localStorage.getItem("usuario");
-                
-                    if (!usuario) {
-                        window.location.href = "login.html";
-                        return;
-                    }
-                
-                    window.location.href =
-                        "avaliacao.html?id=" + filme.id;
-                };
+            const botaoFavoritar = card.querySelector(".btn-favoritar");
+            const botaoLista = card.querySelector(".btn-lista");
+            const botaoAvaliar = card.querySelector(".btn-avaliar");
 
 
             // ==========================================
-            // VERIFICAR SE O FILME JÁ É FAVORITO
+            // CLICAR NO CARD PARA VISUALIZAR O FILME
+            // ==========================================
+
+            card.addEventListener("click", function (event) {
+
+                if (event.target.closest("button")) {
+                    return;
+                }
+
+                abrirFilme(filme.id);
+            });
+
+            card.style.cursor = "pointer";
+
+
+            // ==========================================
+            // VERIFICAR FAVORITO
             // ==========================================
 
             if (usuario) {
                 try {
-
                     const respostaFavorito = await fetch(
                         `http://localhost:3000/favoritos/${usuario.id}/${filme.id}`
                     );
 
                     if (respostaFavorito.ok) {
-
-                        const dadosFavorito =
-                            await respostaFavorito.json();
+                        const dadosFavorito = await respostaFavorito.json();
 
                         if (dadosFavorito.favorito) {
-                            botaoFavoritar.textContent =
-                                "♥ Favoritado";
+                            botaoFavoritar.textContent = "♥ Favoritado";
                         }
                     }
 
                 } catch (erro) {
-
-                    console.error(
-                        "Erro ao verificar favorito:",
-                        erro
-                    );
+                    console.error("Erro ao verificar favorito:", erro);
                 }
             }
 
 
             // ==========================================
-            // VERIFICAR SE O FILME JÁ ESTÁ NA LISTA
+            // VERIFICAR LISTA
             // ==========================================
 
             if (usuario) {
                 try {
-
                     const respostaLista = await fetch(
                         `http://localhost:3000/lista/${usuario.id}/${filme.id}`
                     );
 
                     if (respostaLista.ok) {
-
-                        const dadosLista =
-                            await respostaLista.json();
+                        const dadosLista = await respostaLista.json();
 
                         if (dadosLista.naLista) {
-                            botaoLista.textContent =
-                                "✓ Na Lista";
+                            botaoLista.textContent = "✓ Na Lista";
                         }
                     }
 
                 } catch (erro) {
-
-                    console.error(
-                        "Erro ao verificar lista:",
-                        erro
-                    );
+                    console.error("Erro ao verificar lista:", erro);
                 }
             }
 
@@ -147,7 +152,7 @@ async function carregarFilmes() {
             // FAVORITAR / DESFAVORITAR
             // ==========================================
 
-            botaoFavoritar.onclick = async function (event) {
+            botaoFavoritar.addEventListener("click", async function (event) {
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -157,6 +162,7 @@ async function carregarFilmes() {
                 );
 
                 if (!usuarioAtual) {
+                    alert("Você precisa estar logado para favoritar um filme.");
                     window.location.href = "login.html";
                     return;
                 }
@@ -165,96 +171,47 @@ async function carregarFilmes() {
                     botaoFavoritar.textContent.includes("Favoritado");
 
                 try {
-
                     botaoFavoritar.disabled = true;
 
-                    let resposta;
-
-                    if (estaFavoritado) {
-
-                        // DESFAVORITAR
-                        resposta = await fetch(
-                            "http://localhost:3000/favoritos",
-                            {
-                                method: "DELETE",
-
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    usuario_id: usuarioAtual.id,
-                                    filme_id: filme.id
-                                })
-                            }
-                        );
-
-                    } else {
-
-                        // FAVORITAR
-                        resposta = await fetch(
-                            "http://localhost:3000/favoritos",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    usuario_id: usuarioAtual.id,
-                                    filme_id: filme.id
-                                })
-                            }
-                        );
-                    }
+                    const resposta = await fetch(
+                        "http://localhost:3000/favoritos",
+                        {
+                            method: estaFavoritado ? "DELETE" : "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                usuario_id: usuarioAtual.id,
+                                filme_id: filme.id
+                            })
+                        }
+                    );
 
                     const dados = await resposta.json();
 
-                    console.log("RESPOSTA FAVORITO:", dados);
-
                     if (!resposta.ok) {
-                        throw new Error(
-                            dados.erro ||
-                            "Erro ao alterar favorito"
-                        );
+                        throw new Error(dados.erro || "Erro ao alterar favorito.");
                     }
 
-                    if (estaFavoritado) {
-
-                        botaoFavoritar.textContent =
-                            "♡ Favoritar";
-
-                    } else {
-
-                        botaoFavoritar.textContent =
-                            "♥ Favoritado";
-                    }
+                    botaoFavoritar.textContent = estaFavoritado
+                        ? "♡ Favoritar"
+                        : "♥ Favoritado";
 
                 } catch (erro) {
-
-                    console.error(
-                        "ERRO AO ALTERAR FAVORITO:",
-                        erro
-                    );
-
-                    alert(
-                        "Não foi possível alterar o favorito."
-                    );
+                    console.error("Erro ao alterar favorito:", erro);
+                    alert("Não foi possível alterar o favorito.");
 
                 } finally {
-
                     botaoFavoritar.disabled = false;
-
                 }
-            };
+            });
 
 
             // ==========================================
             // ADICIONAR / REMOVER DA LISTA
             // ==========================================
 
-            botaoLista.onclick = async function (event) {
+            botaoLista.addEventListener("click", async function (event) {
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -264,6 +221,7 @@ async function carregarFilmes() {
                 );
 
                 if (!usuarioAtual) {
+                    alert("Você precisa estar logado para usar sua lista.");
                     window.location.href = "login.html";
                     return;
                 }
@@ -272,121 +230,70 @@ async function carregarFilmes() {
                     botaoLista.textContent.includes("Na Lista");
 
                 try {
-
                     botaoLista.disabled = true;
 
-                    let resposta;
-
-                    if (estaNaLista) {
-
-                        // REMOVER DA LISTA
-                        resposta = await fetch(
-                            "http://localhost:3000/lista",
-                            {
-                                method: "DELETE",
-
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    usuario_id: usuarioAtual.id,
-                                    filme_id: filme.id
-                                })
-                            }
-                        );
-
-                    } else {
-
-                        // ADICIONAR À LISTA
-                        resposta = await fetch(
-                            "http://localhost:3000/lista",
-                            {
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    usuario_id: usuarioAtual.id,
-                                    filme_id: filme.id
-                                })
-                            }
-                        );
-                    }
+                    const resposta = await fetch(
+                        "http://localhost:3000/lista",
+                        {
+                            method: estaNaLista ? "DELETE" : "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                usuario_id: usuarioAtual.id,
+                                filme_id: filme.id
+                            })
+                        }
+                    );
 
                     const dados = await resposta.json();
 
-                    console.log("RESPOSTA LISTA:", dados);
-
                     if (!resposta.ok) {
-                        throw new Error(
-                            dados.erro ||
-                            "Erro ao alterar lista"
-                        );
+                        throw new Error(dados.erro || "Erro ao alterar lista.");
                     }
 
-                    if (estaNaLista) {
-
-                        botaoLista.textContent =
-                            "+ Adicionar à Lista";
-
-                    } else {
-
-                        botaoLista.textContent =
-                            "✓ Na Lista";
-                    }
+                    botaoLista.textContent = estaNaLista
+                        ? "+ Adicionar à Lista"
+                        : "✓ Na Lista";
 
                 } catch (erro) {
-
-                    console.error(
-                        "ERRO AO ALTERAR LISTA:",
-                        erro
-                    );
-
-                    alert(
-                        "Não foi possível alterar a lista."
-                    );
+                    console.error("Erro ao alterar lista:", erro);
+                    alert("Não foi possível alterar sua lista.");
 
                 } finally {
-
                     botaoLista.disabled = false;
-
                 }
-            };
+            });
 
 
             // ==========================================
             // AVALIAR
             // ==========================================
 
-            botaoAvaliar.onclick = function (event) {
+            botaoAvaliar.addEventListener("click", function (event) {
 
                 event.preventDefault();
                 event.stopPropagation();
 
-                const usuario = localStorage.getItem("usuario");
+                const usuarioAtual = localStorage.getItem("usuario");
 
-                if (!usuario) {
+                if (!usuarioAtual) {
+                    alert("Faça login para avaliar um filme.");
                     window.location.href = "login.html";
                     return;
                 }
 
-                window.location.href =
-                    "avaliacao.html?id=" + filme.id;
-            };
+                abrirFilme(filme.id);
+            });
 
 
             lista.appendChild(card);
-        });
+        }
 
     } catch (erro) {
-
         console.error("ERRO NO CATÁLOGO:", erro);
 
-        const lista =
-            document.getElementById("listaFilmes");
+        const lista = document.getElementById("listaFilmes");
 
         if (lista) {
             lista.innerHTML =
@@ -395,34 +302,44 @@ async function carregarFilmes() {
     }
 }
 
-carregarFilmes();
 
-console.log("CATALOGO.JS FOI CARREGADO!");
+// ==========================================
+// PESQUISAR FILMES
+// ==========================================
 
 function pesquisarFilmes() {
 
-    const pesquisa =
-        document.getElementById("pesquisaFilme").value
-        .toLowerCase()
-        .trim();
+    const campo = document.getElementById("pesquisaFilme");
 
-    const cards =
-        document.querySelectorAll("#listaFilmes .card");
+    if (!campo) return;
+
+    const pesquisa = campo.value.toLowerCase().trim();
+
+    const cards = document.querySelectorAll("#listaFilmes .card");
 
     cards.forEach(function (card) {
 
-        const titulo =
-            card.querySelector("h2").textContent.toLowerCase();
+        const titulo = card.querySelector("h2").textContent.toLowerCase();
 
-        if (titulo.includes(pesquisa)) {
-            card.style.display = "";
-        } else {
-            card.style.display = "none";
-        }
-
+        card.style.display = titulo.includes(pesquisa) ? "" : "none";
     });
 }
 
-document
-    .getElementById("pesquisaFilme")
-    .addEventListener("input", pesquisarFilmes);
+
+// ==========================================
+// INICIAR
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const campoPesquisa = document.getElementById("pesquisaFilme");
+
+    if (campoPesquisa) {
+        campoPesquisa.addEventListener("input", pesquisarFilmes);
+    }
+
+    carregarFilmes();
+
+});
+
+console.log("CATALOGO.JS FOI CARREGADO!");

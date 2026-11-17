@@ -301,6 +301,13 @@ const inputFoto =
 const fotoPerfil =
     document.getElementById("fotoPerfil");
 
+console.log("INPUT FOTO:", inputFoto);
+console.log("IMAGEM PERFIL:", fotoPerfil);
+
+inputFoto.addEventListener("click", function () {
+    console.log("CLIQUEI PARA ESCOLHER A FOTO!");
+});
+
 
 // =====================================================
 // CARREGAR FOTO DA CONTA
