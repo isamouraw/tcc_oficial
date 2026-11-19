@@ -1,5 +1,5 @@
-const usuario = JSON.parse(localStorage.getItem("usuario"));
 
+const usuario = JSON.parse(localStorage.getItem("usuario"));
 
 // =====================================================
 // VERIFICAR LOGIN
@@ -7,438 +7,320 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
 
 if (!usuario) {
     window.location.href = "login.html";
-}
+} else {
+
+    // =====================================================
+    // MOSTRAR DADOS DO USUÁRIO
+    // =====================================================
+
+    const nomeUsuario = document.getElementById("nomeUsuario");
+    const emailUsuario = document.getElementById("emailUsuario");
+
+    nomeUsuario.innerText = usuario.nome;
+    emailUsuario.innerText = usuario.email;
 
 
-// =====================================================
-// MOSTRAR DADOS
-// =====================================================
+    // =====================================================
+    // FOTO DE PERFIL
+    // =====================================================
 
-document.getElementById("nomeUsuario").innerText = usuario.nome;
-document.getElementById("emailUsuario").innerText = usuario.email;
+    const fotoPerfil = document.getElementById("fotoPerfil");
+    const inputFoto = document.getElementById("inputFoto");
 
+    const fotoPadrao = "https://placehold.co/120x120/171a45/ffffff?text=Foto";
 
-// =====================================================
-// EDITAR PERFIL
-// =====================================================
-
-const modalEditar = document.getElementById("modalEditar");
-const btnEditar = document.getElementById("btnEditar");
-const fecharEditar = document.getElementById("fecharEditar");
-const salvarPerfil = document.getElementById("salvarPerfil");
-
-btnEditar.addEventListener("click", function () {
-
-    document.getElementById("novoNome").value = usuario.nome;
-    document.getElementById("novoEmail").value = usuario.email;
-
-    document.getElementById("mensagemPerfil").innerText = "";
-
-    modalEditar.classList.add("ativo");
-
-});
-
-
-fecharEditar.addEventListener("click", function () {
-
-    modalEditar.classList.remove("ativo");
-
-});
-
-
-// =====================================================
-// SALVAR ALTERAÇÕES DO PERFIL
-// =====================================================
-
-salvarPerfil.addEventListener("click", async function () {
-
-    const novoNome =
-        document.getElementById("novoNome").value.trim();
-
-    const novoEmail =
-        document.getElementById("novoEmail").value.trim();
-
-    const mensagem =
-        document.getElementById("mensagemPerfil");
-
-
-    if (!novoNome || !novoEmail) {
-
-        mensagem.innerText =
-            "Preencha todos os campos.";
-
-        return;
+    if (usuario.foto_perfil) {
+        fotoPerfil.src = usuario.foto_perfil;
+    } else {
+        fotoPerfil.src = fotoPadrao;
     }
 
+    inputFoto.addEventListener("change", function () {
 
-    try {
+        const arquivo = inputFoto.files[0];
 
-        const resposta = await fetch(
-            "http://localhost:3000/usuarios/editar",
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    id: usuario.id,
-                    nome: novoNome,
-                    email: novoEmail
-                })
-            }
-        );
-
-
-        const dados = await resposta.json();
-
-
-        if (!dados.sucesso) {
-
-            mensagem.innerText =
-                dados.mensagem ||
-                "Erro ao atualizar perfil.";
-
+        if (!arquivo) {
             return;
         }
 
-
-        usuario.nome = novoNome;
-        usuario.email = novoEmail;
-
-
-        localStorage.setItem(
-            "usuario",
-            JSON.stringify(usuario)
-        );
-
-
-        document.getElementById("nomeUsuario").innerText =
-            novoNome;
-
-        document.getElementById("emailUsuario").innerText =
-            novoEmail;
-
-
-        mensagem.innerText =
-            "Perfil atualizado com sucesso!";
-
-
-        setTimeout(() => {
-
-            modalEditar.classList.remove("ativo");
-
-        }, 1000);
-
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        mensagem.innerText =
-            "Erro ao conectar com o servidor.";
-
-    }
-
-});
-
-
-// =====================================================
-// ALTERAR SENHA
-// =====================================================
-
-const modalSenha = document.getElementById("modalSenha");
-const btnSenha = document.getElementById("btnSenha");
-const fecharSenha = document.getElementById("fecharSenha");
-const salvarSenha = document.getElementById("salvarSenha");
-
-
-btnSenha.addEventListener("click", function () {
-
-    document.getElementById("novaSenha").value = "";
-    document.getElementById("confirmarSenha").value = "";
-
-    document.getElementById("mensagemSenha").innerText = "";
-
-    modalSenha.classList.add("ativo");
-
-});
-
-
-fecharSenha.addEventListener("click", function () {
-
-    modalSenha.classList.remove("ativo");
-
-});
-
-
-// =====================================================
-// SALVAR NOVA SENHA
-// =====================================================
-
-salvarSenha.addEventListener("click", async function () {
-
-    const novaSenha =
-        document.getElementById("novaSenha").value;
-
-    const confirmarSenha =
-        document.getElementById("confirmarSenha").value;
-
-    const mensagem =
-        document.getElementById("mensagemSenha");
-
-
-    if (!novaSenha || !confirmarSenha) {
-
-        mensagem.innerText =
-            "Preencha os dois campos.";
-
-        return;
-    }
-
-
-    if (novaSenha !== confirmarSenha) {
-
-        mensagem.innerText =
-            "As senhas não coincidem.";
-
-        return;
-    }
-
-
-    if (novaSenha.length < 6) {
-
-        mensagem.innerText =
-            "A senha deve ter pelo menos 6 caracteres.";
-
-        return;
-    }
-
-
-    try {
-
-        const resposta = await fetch(
-            "http://localhost:3000/usuarios/senha",
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    id: usuario.id,
-                    senha: novaSenha
-                })
-            }
-        );
-
-
-        const dados = await resposta.json();
-
-
-        if (!dados.sucesso) {
-
-            mensagem.innerText =
-                dados.mensagem ||
-                "Erro ao alterar senha.";
-
+        if (!arquivo.type.startsWith("image/")) {
+            alert("Selecione um arquivo de imagem válido.");
+            inputFoto.value = "";
             return;
         }
 
+        const leitor = new FileReader();
 
-        mensagem.innerText =
-            "Senha alterada com sucesso!";
+        leitor.onload = async function () {
 
+            const foto = leitor.result;
 
-        document.getElementById("novaSenha").value = "";
-        document.getElementById("confirmarSenha").value = "";
+            try {
 
-
-        setTimeout(() => {
-
-            modalSenha.classList.remove("ativo");
-
-        }, 1000);
-
-
-    } catch (erro) {
-
-        console.error(erro);
-
-        mensagem.innerText =
-            "Erro ao conectar com o servidor.";
-
-    }
-
-});
-
-
-// =====================================================
-// SAIR
-// =====================================================
-
-document.getElementById("btnSair").addEventListener(
-    "click",
-    function () {
-
-        localStorage.removeItem("usuario");
-
-        window.location.href = "login.html";
-
-    }
-);
-
-
-// =====================================================
-// FOTO DE PERFIL
-// =====================================================
-
-const inputFoto =
-    document.getElementById("inputFoto");
-
-const fotoPerfil =
-    document.getElementById("fotoPerfil");
-
-console.log("INPUT FOTO:", inputFoto);
-console.log("IMAGEM PERFIL:", fotoPerfil);
-
-inputFoto.addEventListener("click", function () {
-    console.log("CLIQUEI PARA ESCOLHER A FOTO!");
-});
-
-
-// =====================================================
-// CARREGAR FOTO DA CONTA
-// =====================================================
-
-if (usuario.foto_perfil) {
-
-    fotoPerfil.src =
-        usuario.foto_perfil;
-
-}
-
-
-// =====================================================
-// ESCOLHER E SALVAR NOVA FOTO
-// =====================================================
-
-inputFoto.addEventListener("change", function () {
-
-
-    const arquivo =
-        inputFoto.files[0];
-
-    if (!arquivo) {
-        return;
-    }
-
-
-    const leitor =
-        new FileReader();
-
-
-    leitor.onload = async function (event) {
-
-        const imagem =
-            event.target.result;
-
-
-        // Mostra a foto imediatamente
-        fotoPerfil.src =
-            imagem;
-
-
-        console.log(
-            "ID DO USUÁRIO:",
-            usuario.id
-        );
-
-        console.log(
-            "FOTO PRONTA PARA ENVIAR:",
-            imagem.substring(0, 30)
-        );
-
-
-        try {
-
-            const resposta = await fetch(
-                "http://localhost:3000/usuarios/foto",
-                {
+                const resposta = await fetch("http://localhost:3000/usuarios/foto", {
                     method: "PUT",
-
                     headers: {
                         "Content-Type": "application/json"
                     },
-
                     body: JSON.stringify({
                         id: usuario.id,
-                        foto_perfil: imagem
+                        foto_perfil: foto
                     })
+                });
+
+                const dados = await resposta.json();
+
+                if (!resposta.ok || !dados.sucesso) {
+                    alert(dados.mensagem || "Erro ao atualizar foto.");
+                    return;
                 }
-            );
 
+                usuario.foto_perfil = foto;
 
-            const dados =
-                await resposta.json();
-
-
-            console.log(
-                "RESPOSTA DO SERVIDOR:",
-                dados
-            );
-
-
-            if (!dados.sucesso) {
-
-                alert(
-                    dados.mensagem ||
-                    "Erro ao salvar foto."
+                localStorage.setItem(
+                    "usuario",
+                    JSON.stringify(usuario)
                 );
 
+                fotoPerfil.src = foto;
+
+                alert("Foto de perfil atualizada com sucesso!");
+
+            } catch (erro) {
+
+                console.error("Erro ao atualizar foto:", erro);
+                alert("Erro ao conectar com o servidor.");
+
+            }
+
+        };
+
+        leitor.readAsDataURL(arquivo);
+
+    });
+
+
+    // =====================================================
+    // EDITAR NOME E E-MAIL
+    // =====================================================
+
+    const modalEditar = document.getElementById("modalEditar");
+    const btnEditar = document.getElementById("btnEditar");
+    const fecharEditar = document.getElementById("fecharEditar");
+    const salvarPerfil = document.getElementById("salvarPerfil");
+
+    const novoNome = document.getElementById("novoNome");
+    const novoEmail = document.getElementById("novoEmail");
+    const mensagemPerfil = document.getElementById("mensagemPerfil");
+
+    btnEditar.addEventListener("click", function () {
+
+        novoNome.value = usuario.nome;
+        novoEmail.value = usuario.email;
+
+        mensagemPerfil.innerText = "";
+
+        modalEditar.classList.add("ativo");
+
+    });
+
+    fecharEditar.addEventListener("click", function () {
+        modalEditar.classList.remove("ativo");
+    });
+
+
+    // =====================================================
+    // SALVAR ALTERAÇÕES DO PERFIL
+    // =====================================================
+
+    salvarPerfil.addEventListener("click", async function () {
+
+        const nome = novoNome.value.trim();
+        const email = novoEmail.value.trim();
+
+        mensagemPerfil.innerText = "";
+
+        if (!nome || !email) {
+            mensagemPerfil.innerText = "Preencha todos os campos.";
+            return;
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            mensagemPerfil.innerText = "Digite um e-mail válido.";
+            return;
+        }
+
+        salvarPerfil.disabled = true;
+
+        try {
+
+            const resposta = await fetch("http://localhost:3000/usuarios/editar", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: usuario.id,
+                    nome: nome,
+                    email: email
+                })
+            });
+
+            const dados = await resposta.json();
+
+            if (!resposta.ok || !dados.sucesso) {
+                mensagemPerfil.innerText =
+                    dados.mensagem || "Erro ao atualizar perfil.";
                 return;
             }
 
-
-            // Atualiza o usuário salvo no navegador
-            usuario.foto_perfil =
-                imagem;
-
+            usuario.nome = nome;
+            usuario.email = email;
 
             localStorage.setItem(
                 "usuario",
                 JSON.stringify(usuario)
             );
 
+            nomeUsuario.innerText = nome;
+            emailUsuario.innerText = email;
 
-            console.log(
-                "Foto salva na conta com sucesso!"
-            );
+            mensagemPerfil.innerText =
+                "Perfil atualizado com sucesso!";
 
+            setTimeout(() => {
+                modalEditar.classList.remove("ativo");
+            }, 1200);
 
         } catch (erro) {
 
-            console.error(
-                "Erro ao salvar foto:",
-                erro
-            );
+            console.error("Erro ao editar perfil:", erro);
 
-            alert(
-                "Erro ao conectar com o servidor."
-            );
+            mensagemPerfil.innerText =
+                "Erro ao conectar com o servidor.";
 
+        } finally {
+            salvarPerfil.disabled = false;
         }
 
-    };
+    });
 
 
-    leitor.readAsDataURL(arquivo);
+    // =====================================================
+    // ALTERAR SENHA
+    // =====================================================
 
-});
+    const modalSenha = document.getElementById("modalSenha");
+    const btnSenha = document.getElementById("btnSenha");
+    const fecharSenha = document.getElementById("fecharSenha");
+    const salvarSenha = document.getElementById("salvarSenha");
+
+    const novaSenha = document.getElementById("novaSenha");
+    const confirmarSenha = document.getElementById("confirmarSenha");
+    const mensagemSenha = document.getElementById("mensagemSenha");
+
+    btnSenha.addEventListener("click", function () {
+
+        novaSenha.value = "";
+        confirmarSenha.value = "";
+
+        mensagemSenha.innerText = "";
+
+        modalSenha.classList.add("ativo");
+
+    });
+
+    fecharSenha.addEventListener("click", function () {
+        modalSenha.classList.remove("ativo");
+    });
 
 
-console.log(
-    "PERFIL.JS FOI CARREGADO"
-);
+    // =====================================================
+    // SALVAR NOVA SENHA
+    // =====================================================
+
+    salvarSenha.addEventListener("click", async function () {
+
+        const senha = novaSenha.value;
+        const confirmacao = confirmarSenha.value;
+
+        mensagemSenha.innerText = "";
+
+        if (!senha || !confirmacao) {
+            mensagemSenha.innerText = "Preencha os dois campos.";
+            return;
+        }
+
+        if (senha !== confirmacao) {
+            mensagemSenha.innerText = "As senhas não coincidem.";
+            return;
+        }
+
+        if (senha.length < 6) {
+            mensagemSenha.innerText =
+                "A senha deve ter pelo menos 6 caracteres.";
+            return;
+        }
+
+        salvarSenha.disabled = true;
+
+        try {
+
+            const resposta = await fetch("http://localhost:3000/usuarios/senha", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    id: usuario.id,
+                    senha: senha
+                })
+            });
+
+            const dados = await resposta.json();
+
+            if (!resposta.ok || !dados.sucesso) {
+                mensagemSenha.innerText =
+                    dados.mensagem || "Erro ao alterar senha.";
+                return;
+            }
+
+            mensagemSenha.innerText =
+                "Senha alterada com sucesso!";
+
+            novaSenha.value = "";
+            confirmarSenha.value = "";
+
+            setTimeout(() => {
+                modalSenha.classList.remove("ativo");
+            }, 1200);
+
+        } catch (erro) {
+
+            console.error("Erro ao alterar senha:", erro);
+
+            mensagemSenha.innerText =
+                "Erro ao conectar com o servidor.";
+
+        } finally {
+            salvarSenha.disabled = false;
+        }
+
+    });
+
+
+    // =====================================================
+    // SAIR DA CONTA
+    // =====================================================
+
+    document.getElementById("btnSair").addEventListener("click", function () {
+
+        localStorage.removeItem("usuario");
+
+        window.location.href = "login.html";
+
+    });
+
+    console.log("PERFIL.JS CARREGADO COM SUCESSO!");
+
+}

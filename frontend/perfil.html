@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -24,27 +25,29 @@
 
     </header>
 
-
     <main class="perfil-area">
 
         <section class="perfil-card">
 
             <div class="perfil-topo">
 
-                <div class="avatar-container">
+                <div class="foto-perfil-container">
+                    <img
+                        id="fotoPerfil"
+                        src="https://placehold.co/120x120/171a45/ffffff?text=Foto"
+                        alt="Foto de perfil"
+                    >
 
-                    <img id="fotoPerfil" src="" alt="Foto de perfil">
-                
-                    <label for="inputFoto" class="botao-foto" title="Alterar foto">
-                        📷
+                    <label for="inputFoto" class="alterar-foto">
+                        Alterar foto
                     </label>
-                
+
                     <input
                         type="file"
                         id="inputFoto"
                         accept="image/*"
+                        hidden
                     >
-                
                 </div>
 
                 <div>
@@ -53,7 +56,6 @@
                 </div>
 
             </div>
-
 
             <div class="dados-usuario">
 
@@ -69,12 +71,9 @@
 
             </div>
 
-
             <div class="opcoes-perfil">
 
                 <button id="btnEditar" class="opcao-perfil">
-                    
-
                     <div>
                         <strong>Editar perfil</strong>
                         <small>Altere seu nome e e-mail</small>
@@ -83,10 +82,7 @@
                     <span class="seta">›</span>
                 </button>
 
-
                 <button id="btnSenha" class="opcao-perfil">
-                    
-
                     <div>
                         <strong>Alterar senha</strong>
                         <small>Atualize sua senha de acesso</small>
@@ -95,10 +91,7 @@
                     <span class="seta">›</span>
                 </button>
 
-
                 <a href="minha-lista.html" class="opcao-perfil">
-                    
-
                     <div>
                         <strong>Minha lista</strong>
                         <small>Veja os filmes salvos</small>
@@ -107,10 +100,7 @@
                     <span class="seta">›</span>
                 </a>
 
-
                 <a href="avaliacoes.html" class="opcao-perfil">
-                  
-
                     <div>
                         <strong>Minhas avaliações</strong>
                         <small>Veja suas avaliações</small>
@@ -121,15 +111,13 @@
 
             </div>
 
-
             <button id="btnSair" class="btn-sair">
-                 Sair da conta
+                Sair da conta
             </button>
 
         </section>
 
     </main>
-
 
     <!-- MODAL EDITAR PERFIL -->
 
@@ -169,7 +157,6 @@
 
     </div>
 
-
     <!-- MODAL ALTERAR SENHA -->
 
     <div id="modalSenha" class="modal">
@@ -207,7 +194,6 @@
         </div>
 
     </div>
-
 
     <script src="perfil.js"></script>
 

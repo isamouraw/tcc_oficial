@@ -5,13 +5,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>CineTrack - Login e Cadastro</title>
 
     <link rel="stylesheet" href="style.css">
 
     <style>
-        #caixaCadastro,
-        #caixaVerificacao {
+        /* Somente o login aparece inicialmente */
+        #caixaCadastro {
             display: none;
         }
     </style>
@@ -19,7 +20,7 @@
 
 <body id="login">
 
-    <!-- LOGIN -->
+    <!-- CAIXA DE LOGIN -->
     <div id="caixaLogin">
 
         <h1>Login</h1>
@@ -54,7 +55,7 @@
     </div>
 
 
-    <!-- CADASTRO -->
+    <!-- CAIXA DE CADASTRO -->
     <div id="caixaCadastro">
 
         <h1>Cadastrar novo usuário</h1>
@@ -91,38 +92,6 @@
         <a href="#" id="linkIrLogin">
             Clique aqui para fazer login
         </a>
-
-    </div>
-
-
-    <!-- CONFIRMAÇÃO DE E-MAIL -->
-    <div id="caixaVerificacao">
-
-        <h1>Confirme seu e-mail</h1>
-
-        <p>
-            Enviamos um código de confirmação para seu endereço de e-mail.
-        </p>
-
-        <form id="formVerificacao">
-
-            <input
-                type="text"
-                id="codigoVerificacao"
-                placeholder="Digite o código de 6 dígitos"
-                maxlength="6"
-                inputmode="numeric"
-                pattern="[0-9]{6}"
-                required
-            >
-
-            <button type="submit">
-                Confirmar e-mail
-            </button>
-
-        </form>
-
-        <p id="mensagemVerificacao"></p>
 
     </div>
 

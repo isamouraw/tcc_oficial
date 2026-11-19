@@ -1,16 +1,21 @@
 
+console.log("LOGIN.JS ESTÁ FUNCIONANDO!");
+
 const formLogin = document.getElementById("formLogin");
 const formCadastro = document.getElementById("formCadastro");
-const formVerificacao = document.getElementById("formVerificacao");
 
 const caixaLogin = document.getElementById("caixaLogin");
 const caixaCadastro = document.getElementById("caixaCadastro");
-const caixaVerificacao = document.getElementById("caixaVerificacao");
 
 const linkIrCadastro = document.getElementById("linkIrCadastro");
 const linkIrLogin = document.getElementById("linkIrLogin");
 
-let emailCadastroPendente = "";
+// ==========================================
+// TELA INICIAL: LOGIN
+// ==========================================
+
+caixaLogin.style.display = "block";
+caixaCadastro.style.display = "none";
 
 
 // ==========================================
@@ -18,6 +23,8 @@ let emailCadastroPendente = "";
 // ==========================================
 
 formCadastro.addEventListener("submit", async function(event) {
+
+    console.log("BOTÃO CADASTRAR FOI ACIONADO!");
 
     event.preventDefault();
 
@@ -39,17 +46,26 @@ formCadastro.addEventListener("submit", async function(event) {
 
         const resultado = await resposta.json();
 
+        console.log("RESPOSTA DO SERVIDOR:", resultado);
+
         mensagemCadastro.innerText = resultado.mensagem;
 
         if (resultado.sucesso) {
 
-            emailCadastroPendente = email;
+            mensagemCadastro.style.color = "green";
+
+            // Limpa os campos do cadastro
+            formCadastro.reset();
+
+            // Volta para a tela de login
+            document.getElementById("emailLogin").value = email;
 
             caixaCadastro.style.display = "none";
-            caixaVerificacao.style.display = "block";
+            caixaLogin.style.display = "block";
 
-            document.getElementById("codigoVerificacao").value = "";
-            document.getElementById("mensagemVerificacao").innerText = "";
+        } else {
+
+            mensagemCadastro.style.color = "red";
 
         }
 
@@ -58,62 +74,7 @@ formCadastro.addEventListener("submit", async function(event) {
         console.error("Erro no cadastro:", erro);
 
         mensagemCadastro.innerText = "Erro ao conectar com o servidor.";
-
-    }
-
-});
-
-
-// ==========================================
-// CONFIRMAÇÃO DO E-MAIL
-// ==========================================
-
-formVerificacao.addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    const codigo = document.getElementById("codigoVerificacao").value.trim();
-
-    const mensagemVerificacao = document.getElementById("mensagemVerificacao");
-
-    try {
-
-        const resposta = await fetch("http://localhost:3000/usuarios/verificar-email", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: emailCadastroPendente,
-                codigo: codigo
-            })
-        });
-
-        const resultado = await resposta.json();
-
-        mensagemVerificacao.innerText = resultado.mensagem;
-
-        if (resultado.sucesso) {
-
-            mensagemVerificacao.style.color = "green";
-
-            document.getElementById("emailLogin").value = emailCadastroPendente;
-
-            caixaVerificacao.style.display = "none";
-            caixaLogin.style.display = "block";
-
-        } else {
-
-            mensagemVerificacao.style.color = "red";
-
-        }
-
-    } catch (erro) {
-
-        console.error("Erro na confirmação:", erro);
-
-        mensagemVerificacao.innerText = "Erro ao conectar com o servidor.";
-        mensagemVerificacao.style.color = "red";
+        mensagemCadastro.style.color = "red";
 
     }
 

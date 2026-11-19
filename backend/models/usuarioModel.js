@@ -3,20 +3,16 @@ const conexao = require("../database/conexao");
 
 const UsuarioModel = {
 
-    // CADASTRO COM CÓDIGO DE VERIFICAÇÃO
-    cadastrarComVerificacao: (nome, email, senha, codigo, expiracao, callback) => {
+    // CADASTRO
+    cadastrar: (nome, email, senha, callback) => {
 
         const sql = `
             INSERT INTO usuarios
-            (nome, email, senha, codigo_verificacao, codigo_expiracao, email_verificado)
-            VALUES (?, ?, ?, ?, ?, 0)
+            (nome, email, senha)
+            VALUES (?, ?, ?)
         `;
 
-        conexao.query(
-            sql,
-            [nome, email, senha, codigo, expiracao],
-            callback
-        );
+        conexao.query(sql, [nome, email, senha], callback);
     },
 
 
@@ -24,7 +20,7 @@ const UsuarioModel = {
     login: (email, senha, callback) => {
 
         const sql = `
-            SELECT *
+            SELECT id, nome, email, foto_perfil
             FROM usuarios
             WHERE email = ?
             AND senha = ?
@@ -34,26 +30,7 @@ const UsuarioModel = {
     },
 
 
-    // CONFIRMAR E-MAIL
-    verificarCodigo: (email, codigo, callback) => {
-
-        const sql = `
-            UPDATE usuarios
-            SET
-                email_verificado = 1,
-                codigo_verificacao = NULL,
-                codigo_expiracao = NULL
-            WHERE email = ?
-            AND codigo_verificacao = ?
-            AND codigo_expiracao > NOW()
-            AND email_verificado = 0
-        `;
-
-        conexao.query(sql, [email, codigo], callback);
-    },
-
-
-    // EDITAR PERFIL
+    // EDITAR NOME E E-MAIL
     editarPerfil: (id, nome, email, callback) => {
 
         const sql = `

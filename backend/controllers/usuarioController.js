@@ -1,7 +1,5 @@
 
 const UsuarioModel = require("../models/usuarioModel");
-const { enviarCodigoVerificacao } = require("../email");
-const crypto = require("crypto");
 
 const UsuarioController = {
 
@@ -10,6 +8,8 @@ const UsuarioController = {
 
         const { nome, email, senha } = req.body;
 
+        console.log("SOLICITAÇÃO DE CADASTRO RECEBIDA:", email);
+
         if (!nome || !email || !senha) {
             return res.json({
                 sucesso: false,
@@ -17,52 +17,32 @@ const UsuarioController = {
             });
         }
 
-        const codigo = crypto.randomInt(100000, 1000000).toString();
-        const expiracao = new Date(Date.now() + 10 * 60 * 1000);
+        UsuarioModel.cadastrar(nome, email, senha, (erro) => {
 
-        UsuarioModel.cadastrarComVerificacao(
-            nome,
-            email,
-            senha,
-            codigo,
-            expiracao,
-            async (erro) => {
+            if (erro) {
+                console.error("Erro ao cadastrar:", erro);
 
-                if (erro) {
-                    console.error("Erro ao cadastrar:", erro);
-
-                    if (erro.code === "ER_DUP_ENTRY") {
-                        return res.json({
-                            sucesso: false,
-                            mensagem: "Este e-mail já está cadastrado."
-                        });
-                    }
-
-                    return res.status(500).json({
-                        sucesso: false,
-                        mensagem: "Erro ao cadastrar usuário."
-                    });
-                }
-
-                const enviado = await enviarCodigoVerificacao(email, codigo);
-
-                if (!enviado) {
+                if (erro.code === "ER_DUP_ENTRY") {
                     return res.json({
                         sucesso: false,
-                        mensagem: "Cadastro criado, mas não foi possível enviar o código. Entre em contato com o suporte."
+                        mensagem: "Este e-mail já está cadastrado."
                     });
                 }
 
-                return res.json({
-                    sucesso: true,
-                    mensagem: "Cadastro realizado! Enviamos um código de confirmação para seu e-mail."
+                return res.status(500).json({
+                    sucesso: false,
+                    mensagem: "Erro ao cadastrar usuário."
                 });
-
             }
-        );
+
+            return res.json({
+                sucesso: true,
+                mensagem: "Usuário cadastrado com sucesso!"
+            });
+
+        });
 
     },
-
 
     // LOGIN
     login: (req, res) => {
@@ -87,13 +67,6 @@ const UsuarioController = {
                 });
             }
 
-            if (!resultado[0].email_verificado) {
-                return res.json({
-                    sucesso: false,
-                    mensagem: "Confirme seu e-mail antes de entrar."
-                });
-            }
-
             return res.json({
                 sucesso: true,
                 mensagem: "Login realizado com sucesso!",
@@ -103,51 +76,6 @@ const UsuarioController = {
         });
 
     },
-
-
-    // CONFIRMAR E-MAIL
-    verificarEmail: (req, res) => {
-
-        const { email, codigo } = req.body;
-
-        if (!email || !codigo) {
-            return res.json({
-                sucesso: false,
-                mensagem: "Informe seu e-mail e o código recebido."
-            });
-        }
-
-        UsuarioModel.verificarCodigo(
-            email,
-            codigo,
-            (erro, resultado) => {
-
-                if (erro) {
-                    console.error("Erro ao verificar e-mail:", erro);
-
-                    return res.status(500).json({
-                        sucesso: false,
-                        mensagem: "Erro ao confirmar e-mail."
-                    });
-                }
-
-                if (resultado.affectedRows === 0) {
-                    return res.json({
-                        sucesso: false,
-                        mensagem: "Código inválido ou expirado."
-                    });
-                }
-
-                return res.json({
-                    sucesso: true,
-                    mensagem: "E-mail confirmado com sucesso! Agora você pode fazer login."
-                });
-
-            }
-        );
-
-    },
-
 
     // EDITAR PERFIL
     editarPerfil: (req, res) => {
@@ -181,7 +109,6 @@ const UsuarioController = {
 
     },
 
-
     // ALTERAR SENHA
     alterarSenha: (req, res) => {
 
@@ -214,7 +141,6 @@ const UsuarioController = {
 
     },
 
-
     // BUSCAR USUÁRIO
     buscarPorId: (req, res) => {
 
@@ -246,7 +172,6 @@ const UsuarioController = {
         });
 
     },
-
 
     // ATUALIZAR FOTO DE PERFIL
     atualizarFoto: (req, res) => {
@@ -283,3 +208,4 @@ const UsuarioController = {
 };
 
 module.exports = UsuarioController;
+    
